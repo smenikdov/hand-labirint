@@ -6,53 +6,13 @@
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Web site created using create-react-app" />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple|3d-float|anaglyph|neon">
   <title>Hand Labirint</title>
 </head>
 
 <body>
-  <div id="lab"></div>
-
-
-  <div class="three">
-    <h1 id="write_h1">Загаловок</h1>
-    <div class="levels">
-      <div class="level" onclick="SetLevel(0)">1</div>
-      <div class="level" onclick="SetLevel(1)">2</div>
-      <div class="level" onclick="SetLevel(2)">3</div>
-      <div class="level" onclick="SetLevel(3)">4</div>
-      <div class="level" onclick="SetLevel(4)">5</div>
-      <div class="level" onclick="SetLevel(5)">6</div>
-      <div class="level" onclick="SetLevel(6)">7</div>
-      <div class="level" onclick="SetLevel(-1)">Случайная</div>
-    </div>
-    <p id="write_p">Управляйте красным кружком, двигая своей рукой. Чтобы начать доведите его до красного квадрата. Пока
-      стены вы можете игнорировать, пролитая над ними.</p>
-    <canvas class="output_canvas"></canvas>
-    <i id="write_i">Подсказка: отодвнтесь от экрана, чтобы движения были более плавными.</i>
-    <div id="timer">
-      <span class="minutes">00</span>:<span class="seconds">00</span>:<span class="miliseconds">00</span>
-      <div id="record">
-        <span class="minutes">00</span>:<span class="seconds">00</span>:<span class="miliseconds">00</span>
-      </div>
-    </div>
-  </div>
-
-
-  <div id="me"></div>
-  <video class="input_video"></video>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <script src="levels.js"></script>
-  <script src="functions.js"></script>
-  <script src="script.js"></script>
+  <div id="app"></div>
 </body>
 
 </html>
