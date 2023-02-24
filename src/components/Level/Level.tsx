@@ -1,38 +1,37 @@
-import levels from '../../levels/levels';
+import React, { useState, useEffect } from 'react';
+import planets from '../../levels/planets';
 import Cell from './Cell';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
-
-type CellSymbol = ' ' | '#' | '1' | '0' | '$';
+import { CellSymbol } from '../../levels/levelsSettings';
+import { addStack } from '../../store/chat';
 
 export default function Level() {
-  const levelId = useSelector((state: RootState) => state.level.id);
-  let level = levels[levelId].lab;
+    const dispatch = useDispatch();
+    const { planetId, levelId } = useSelector((state: RootState) => state.level);
+    const level = planets[planetId].levels[levelId];
 
-  return (
-    <>
-      <div id='lab'>
-        {
-          level.map(
-            (line, rowIndex) =>
-              <div key={`row_${rowIndex}`} className='row'>
-                {
-                  [...line].map(
-                    (cell, cellIndex) =>
-                      <Cell
-                        key={`cell_${cellIndex}`}
-                        cellSymbol={cell as CellSymbol}
-                      />
-                  )
-                }
-              </div>
-          )
+    useEffect(() => {
+        if (level.chat) {
+            dispatch(addStack(level.chat));
         }
-      </div>
+    }, [])
 
-      <div id='player'></div>
-    </>
-  );
+    return (
+        <div id='map'>
+            {level.lab.map((line, rowIndex) =>
+                <div key={`row_${rowIndex}`} className='row'>
+                    {
+                        [...line].map((cell, cellIndex) =>
+                            <Cell
+                                key={`cell_${cellIndex}`}
+                                cellSymbol={cell as CellSymbol}
+                            />)
+                    }
+                </div>
+            )}
+        </div>
+    );
 }
 
 

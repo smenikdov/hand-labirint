@@ -3,12 +3,14 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 interface Level {
     isStartPlay: boolean,
-    id: number,
+    planetId: number,
+    levelId: number,
 }
 
 const initialState: Level = {
     isStartPlay: false,
-    id: 0,
+    planetId: 0,
+    levelId: 0,
 };
 
 const slice = createSlice({
@@ -18,11 +20,16 @@ const slice = createSlice({
     reducers: {
         setLevel(level, action: PayloadAction<number>) {
             const levelId = action.payload;
-            level.id = levelId;
+            level.levelId = levelId;
+        },
+
+        setPlanet(level, action: PayloadAction<number>) {
+            const planetId = action.payload;
+            level.planetId = planetId;
         },
 
         nextLevel(level) {
-            level.id += 1;
+            level.levelId += 1;
         },
 
         startPlay(level) {
@@ -37,5 +44,5 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-const { setLevel, nextLevel, startPlay, endPlay } = slice.actions;
-export { setLevel, nextLevel, startPlay, endPlay };
+const { setLevel, nextLevel, startPlay, endPlay, setPlanet } = slice.actions;
+export { setLevel, nextLevel, startPlay, endPlay, setPlanet };

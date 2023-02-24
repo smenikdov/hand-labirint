@@ -1,0 +1,110 @@
+@use "sass:map";
+@import 'constantsAndMixins.scss';
+
+$planetColors: (
+    "darkPlanet": ("color1": #090231, "color2": #471616, "color3": #000),
+    "doublePlanet": ("color1": $negativeColor, "color2": $positiveColor, "color3": $neutralColor),
+    "startPlanet": ("color1": #18d638, "color2": #09ceff, "color3": #ffffff),
+);
+
+#menu {
+    @include absoluteToCenter();
+    height: 100vh;
+    width: 100vw;
+    // @include strongLight($positiveColor);
+    // background: none;
+    // border: $wallSize solid $positiveColor;
+}
+
+@each $planetName,
+$planetColor in $planetColors {
+    $color1: map.get($planetColor, "color1");
+    $color2: map.get($planetColor, "color2");
+    $color3: map.get($planetColor, "color3");
+
+    @keyframes #{$planetName}Animation {
+        from {
+            box-shadow:
+                inset 0 0 50px $color3,
+                inset 20px 0 80px $color1,
+                inset -20px 0 80px $color2,
+                inset 20px 0 300px $color1,
+                inset -20px 0 300px $color2,
+                0 0 50px $color3,
+                -10px 0 80px $color1,
+                10px 0 80px $color2;
+        }
+
+        to {
+            box-shadow:
+                inset 0 0 50px $color3,
+                inset 15px 0 65px $color2,
+                inset -15px 0 65px $color1,
+                inset 20px 0 300px $color2,
+                inset -20px 0 300px $color1,
+                0 0 20px $color3,
+                -10px 0 15px $color2,
+                10px 0 15px $color1;
+        }
+    }
+
+    .#{$planetName} {
+        box-shadow:
+            inset 0 0 50px $color3,
+            inset 20px 0 80px $color1,
+            inset -20px 0 80px $color2,
+            inset 20px 0 300px $color1,
+            inset -20px 0 300px $color2,
+            0 0 50px $color3,
+            -10px 0 80px $color1,
+            10px 0 80px $color2;
+        animation: #{$planetName}Animation 5s infinite alternate linear;
+        animation-delay: random()*3+s;
+    }
+}
+
+
+.neonPlanet {
+    @include absoluteToCenter();
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 300ms;
+
+    .planetLevels {
+        .level {
+            @include absoluteToCenter();
+            @include strongLight($neutralColor);
+            @include bigFont();
+            cursor: pointer;
+            transition: 300ms;
+            width: $exlgSize * 2;
+            height: $exlgSize * 2;
+            text-align: center;
+            border-radius: 50%;
+            color: black;
+            text-shadow: none;
+
+            &:hover {
+                box-shadow: 0 0 35px $neutralColor
+            }
+
+            div {
+                margin-top: 7px;
+            }
+        }
+    }
+}
+
+.tooltip {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+}

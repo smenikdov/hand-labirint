@@ -2,11 +2,13 @@ import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/
 import playerReducer from './player';
 import timerReducer from './timer';
 import levelReducer from './level';
+import chatReducer from './chat';
 
 const rootReducer = combineReducers({
     player: playerReducer,
     timer: timerReducer,
     level: levelReducer,
+    chat: chatReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>

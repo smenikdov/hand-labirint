@@ -1,0 +1,38 @@
+@import 'constantsAndMixins.scss';
+
+#chat {
+    position: absolute;
+    width: $elemntWidth;
+    height: $cellSize * $cellCount / 3 * 2;
+    right: $horizontalMargin;
+    top: $verticalMapMargin;
+    @include strongLight($neutralColor);
+    background: none;
+    border: $wallSize solid $neutralColor;
+
+    .header {
+        @include bigFont();
+
+        .icon {
+            @include strongSvgLight($neutralColor);
+            height: $mdSize * 4.5;
+        }
+    }
+
+    .delimiter {
+        @include weakLight($neutralColor);
+        height: $smSize;
+    }
+
+    .body {
+        @include smallFont();
+    }
+
+    .enterArrow {
+        position: absolute;
+        cursor: pointer;
+        right: $mdSize;
+        bottom: $mdSize;
+        @include strongSvgLight($neutralColor);
+    }
+}

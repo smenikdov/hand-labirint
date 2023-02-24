@@ -1,0 +1,143 @@
+/* CONSTANTS */
+
+$negativeColor: #FD3F55;
+$positiveColor: #37B7FF;
+$neutralColor: #ffffff;
+
+$mdSize: 14px;
+$smSize: $mdSize / 2;
+$exsmSize: $mdSize / 4;
+$lgSize: $mdSize * 1.6;
+$exlgSize: $mdSize * 2.2;
+
+$sizes: (
+    "None": 0,
+    "Exsm": $exsmSize,
+    "Sm": $smSize,
+    "Md": $mdSize,
+    "Lg": $lgSize,
+    "Exlg": $exlgSize,
+);
+
+$mapSize: 80vh;
+$cellCount: 16;
+$cellSize: $mapSize / $cellCount;
+
+$wallSize: $mdSize;
+$wallMargin: calc((#{$cellSize} - #{$wallSize}) / 2);
+$verticalMapMargin: calc((100vh - $mapSize) / 2 + $wallMargin);
+
+$elemntWidth: 370px;
+$horizontalMargin: calc(((#{100vw} - #{$mapSize}) / 2 - #{$elemntWidth}) / 2);
+
+/* MIXINS */
+@mixin weakLight($color) {
+    color: $color;
+    background-color: $color;
+    box-shadow: 0 0 20px rgba($color, 0.4);
+    text-shadow: 0 0 20px rgba($color, 0.4);
+}
+
+@mixin strongLight($color) {
+    color: $color;
+    background-color: $color;
+    box-shadow: 0 0 25px rgba($color, 0.7);
+    text-shadow: 0 0 25px rgba($color, 0.7);
+}
+
+@mixin strongSvgLight($color) {
+    filter: drop-shadow(0 0 25px rgb($color, 0.8));
+}
+
+@mixin weakSvgLight($color) {
+    filter: drop-shadow(0 0 20px rgb($color, 0.4));
+}
+
+@mixin smallFont() {
+    font-size: $lgSize;
+    font-weight: 600;
+}
+
+@mixin bigFont() {
+    font-size: $exlgSize;
+    font-weight: 800;
+}
+
+@mixin absoluteToCenter() {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+/* ---global */
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fullWidth {
+    width: 100%,
+}
+
+.fullHeight {
+    height: 100%,
+}
+
+.displayNone {
+    display: none;
+}
+
+
+@each $sizeName,
+$sizeValue in $sizes {
+
+    @each $spaceAbbr,
+    $spaceProp in ('m': 'margin', 'p': 'padding') {
+
+        .#{$spaceAbbr}t#{$sizeName} {
+            #{$spaceProp}-top: $sizeValue;
+        }
+
+        .#{$spaceAbbr}b#{$sizeName} {
+            #{$spaceProp}-bottom: $sizeValue;
+        }
+
+        .#{$spaceAbbr}l#{$sizeName} {
+            #{$spaceProp}-left: $sizeValue;
+        }
+
+        .#{$spaceAbbr}r#{$sizeName} {
+            #{$spaceProp}-right: $sizeValue;
+        }
+
+        .#{$spaceAbbr}a#{$sizeName} {
+            #{$spaceProp}: $sizeValue;
+        }
+
+        .#{$spaceAbbr}x#{$sizeName} {
+            #{$spaceProp}-right: $sizeValue;
+            #{$spaceProp}-left: $sizeValue;
+        }
+
+        .#{$spaceAbbr}y#{$sizeName} {
+            #{$spaceProp}-bottom: $sizeValue;
+            #{$spaceProp}-top: $sizeValue;
+        }
+    }
+}
+
+
+@keyframes rotationAnimation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}

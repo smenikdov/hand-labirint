@@ -1,37 +1,56 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import Level from './components/Level/Level';
-import LevelMenu from './components/Level/LevelMenu';
-import Shop from './components/Shop/Shop';
-import Bar from './components/Bar';
+import CameraInterface from './components/CameraInterface';
+import MyParticles from './components/MyParticles';
 import startMainLoop from './scripts/mainLoop';
 import { Provider } from 'react-redux';
 import store from './store/';
-import './styles/main.css';
 import Player from './components/Player';
+import Chat from './components/Chat';
+import Menu from './components/Menu';
+import './styles/main.scss';
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+} from 'react-router-dom';
+
 
 function App() {
-  useEffect(() => {
-    startMainLoop();
-  }, []);
+    useEffect(() => {
+        startMainLoop();
+    }, []);
 
-  return (
-    <main>
-      <Bar />
-      <Level />
-      <LevelMenu />
-      <Shop />
-      <Player />
-    </main>
-  )
+
+
+    return (
+        <main>
+            <BrowserRouter>
+                <MyParticles />
+                <div id="eclipseBlock" />
+
+                <Routes>
+                    <Route path="/" element={<Menu />} />
+                </Routes>
+                <Routes>
+                    <Route path="/game" element={<Level />} />
+                </Routes>
+
+                <CameraInterface />
+                <Chat />
+                {/* <Player /> */}
+            </BrowserRouter>
+        </main>
+    )
 }
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>,
-  </React.StrictMode>,
-  document.getElementById('app')
+    <React.StrictMode>
+        <Provider store={store}>
+            <App />
+        </Provider>,
+    </React.StrictMode>,
+    document.getElementById('app')
 );
 

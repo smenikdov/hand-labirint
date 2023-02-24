@@ -1,0 +1,59 @@
+@import 'constantsAndMixins.scss';
+
+#cameraInterface {
+    position: absolute;
+    width: $elemntWidth;
+    left: 0;
+    top: 20vh;
+
+    #outputCanvas {
+        width: 100%;
+        height: $elemntWidth / 4 * 3;
+        background: $neutralColor;
+    }
+
+    .own {
+        @include strongLight($neutralColor);
+        @include bigFont();
+        justify-content: start;
+        background: none;
+        box-shadow: none;
+
+        .icon {
+            width: $exlgSize;
+            height: $exlgSize;
+            @include strongSvgLight($neutralColor);
+        }
+
+        .starsCount {
+            margin-left: $exlgSize * 1.3;
+
+            .icon {
+                background-image: url('../assets/img/star.svg');
+                background-size: 100% 100%;
+            }
+        }
+
+        .coinsCount .icon {
+            @include strongLight($neutralColor);
+            background: none;
+            border: $smSize solid $neutralColor;
+            border-radius: 50%;
+        }
+    }
+}
+
+#menuButton {
+    justify-content: start;
+    position: absolute;
+    top: $exlgSize;
+    left: $exlgSize;
+    cursor: pointer;
+
+    div {
+        @include strongLight($neutralColor);
+        width: $mdSize;
+        height: $exlgSize * 1.3;
+        margin-right: 10px;
+    }
+}
