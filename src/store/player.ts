@@ -6,6 +6,7 @@ interface Player {
     coins: number,
     x: number,
     y: number,
+    type: 'positive' | 'negative',
     charge: number,
     maxCharge: number,
     godMode: boolean,
@@ -21,6 +22,7 @@ const initialState: Player = {
     coins: parseInt(localStorage.getItem('coins') || '0'),
     x: 50,
     y: 50,
+    type: 'negative',
     charge: 3,
     maxCharge: 3,
     godMode: true,
@@ -31,6 +33,10 @@ const slice = createSlice({
     initialState,
 
     reducers: {
+        setType(player, action: PayloadAction<'positive' | 'negative'>) {
+            player.type = action.payload;
+        },
+
         setStars(player, action: PayloadAction<number>) {
             const newStarsCount = action.payload;
             localStorage.setItem('stars', newStarsCount.toString());
@@ -52,5 +58,5 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-const { setStars, setCoins, goTo, } = slice.actions;
-export { setStars, setCoins, goTo, };
+const { setStars, setCoins, goTo, setType, } = slice.actions;
+export { setStars, setCoins, goTo, setType, };

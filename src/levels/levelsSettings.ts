@@ -1,7 +1,7 @@
 export const parseLab = {
     ' ': 'empty',
     '1': 'finish',
-    '0': 'start',
+    '0': 'start', // Пока что может находиться только на верхней линии
     '★': 'star neutral',
     '┏': 'wall LeftTopAngle',
     '┓': 'wall rightTopAngle',
@@ -25,6 +25,9 @@ export type Level = {
     id: number,
     title: string,
     chat?: Message[],
+    darkMode?: boolean,
+    doubleMode?: boolean,
+    stopMode?: boolean,
 }
 
 export type Planet = {
@@ -36,4 +39,13 @@ export type Planet = {
     description?: string,
     size?: string,
     className: string,
+}
+
+
+export const isWall = (cell: CellSymbol): boolean => {
+    if (['┏', '┓', '┗', '┛', '-', '|', '#'].includes(cell)) {
+        return true
+    } else {
+        return false
+    }
 }

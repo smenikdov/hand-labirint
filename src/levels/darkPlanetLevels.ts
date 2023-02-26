@@ -24,6 +24,7 @@ levels.push({
     ],
     id: levelId++,
     title: 'Ну поехали!',
+    darkMode: true,
     chat: [
         {
             text: 'Что? Кто ты такой?... Как ты здесь оказлся?',

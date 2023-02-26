@@ -49,7 +49,7 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     };
 
     const changeLevel = (levelId: number): void => {
-        if (!activePlanet) {
+        if (activePlanet === null) {
             return;
         }
         dispatch(setPlanet(id));

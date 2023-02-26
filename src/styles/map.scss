@@ -1,15 +1,5 @@
 @import 'constantsAndMixins.scss';
 
-#eclipseBlock {
-    top: 0;
-    left: 0;
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    background: radial-gradient(circle, rgba(#fff, 0.07), rgba(#000, 0.9) 75vh);
-    opacity: 0.9;
-}
-
 #map {
     position: absolute;
     height: $mapSize;
@@ -32,9 +22,41 @@
             opacity: 0;
         }
 
-        .finish {}
+        .finish {
+            position: relative;
+            @include strongLight($negativeColor);
+            //border-radius: 50%;
 
-        .start {}
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 2px;
+                @include strongLight($negativeColor);
+                height: $wallSize;
+                width: 260px;
+                margin-top: $wallMargin;
+                margin-bottom: $wallMargin;
+            }
+        }
+
+        .start {
+            position: relative;
+            @include strongLight($negativeColor);
+            //border-radius: 50%;
+
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                bottom: 2px;
+                @include strongLight($negativeColor);
+                width: $wallSize;
+                height: 200px;
+                margin-left: $wallMargin;
+                margin-right: $wallMargin;
+            }
+        }
 
         .wall {
             @include strongLight($positiveColor);
@@ -68,14 +90,51 @@
     }
 }
 
-#player {
+.battery {
+    position: absolute;
+    right: -370px;
+    @include weakLight($negativeColor);
+    background: none;
+    border: $smSize solid $negativeColor;
+
+    .charge {
+        @include weakLight($negativeColor);
+        background: none;
+        border: 3px solid $negativeColor;
+        width: $exlgSize;
+        height: $exlgSize;
+        margin: 6px 3px;
+
+        &:first-child {
+            margin-left: 6px;
+        }
+
+        &:last-child {
+            margin-right: 6px;
+        }
+
+        &.active {
+            @include weakLight($negativeColor);
+        }
+    }
+}
+
+.player {
     position: absolute;
     border-radius: 50%;
     width: $lgSize;
     height: $lgSize;
     will-change: transform;
-    transition: 400ms;
-    @include strongLight($negativeColor);
+    z-index: 999;
+    // transition: 400ms;
+
+    &.negative {
+        @include strongLight($negativeColor);
+    }
+
+    &.positive {
+        @include strongLight($positiveColor);
+    }
 
     .rotateBlock {
         height: 100%;
@@ -92,12 +151,137 @@
     }
 }
 
-#tsparticles {
-    @include absoluteToCenter();
-    background-color: #0B0B17;
+#darkMode {
+    @include fullSize();
+    z-index: 100;
+}
 
-    canvas {
-        width: $mapSize * 1.2 !important;
-        @include absoluteToCenter();
+#stopMode {
+    @include fullSize();
+    z-index: 100;
+}
+
+.spaceship {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 180px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 300ms;
+
+    animation: spaceshipFlying 9s infinite ease-in-out;
+    z-index: 900;
+}
+
+.spaceshipTop {
+    height: 55%;
+    width: 66%;
+    @include strongLight($positiveColor);
+    opacity: 0.3;
+    border-radius: 8rem 8rem 0 0;
+}
+
+.spaceshipMiddle {
+    width: 100%;
+    height: 37%;
+    overflow: hidden;
+    border-radius: 5rem;
+    @include strongLight($neutralColor);
+
+    .ballsContainer {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        animation: moveleft 400ms linear infinite;
+
+        .ball {
+            min-height: 28px;
+            min-width: 28px;
+            margin: 0 4px;
+            border-radius: 50%;
+            background: $positiveColor;
+        }
+    }
+}
+
+.spaceshipBottom {
+    width: 55%;
+    height: 8%;
+    @include strongLight($positiveColor);
+    border-radius: 0 0 2rem 2rem;
+}
+
+
+@keyframes moveleft {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(-20%, 0);
+    }
+}
+
+@keyframes spaceshipComing {
+    0% {
+        transform: rotate(-10deg);
+        left: 200%;
+    }
+
+    35% {
+        transform: rotate(-10deg);
+    }
+
+    85% {
+        left: 45%;
+        transform: rotate(10deg);
+    }
+
+    100% {
+        left: 50%;
+        transform: rotate(0deg) translateY(0px);
+    }
+}
+
+@keyframes spaceshipLeaving {
+    0% {
+        left: 50%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+
+@keyframes spaceshipFlying {
+    0% {
+        translate: 30px -8px;
+        rotate: -10deg;
+    }
+
+    25% {
+        translate: -30px -8px;
+        rotate: 10deg;
+    }
+
+    50% {
+        translate: 30px 8px;
+        rotate: -10deg;
+    }
+
+    75% {
+        translate: -30px 8px;
+        rotate: 10deg;
+    }
+
+    100% {
+        translate: 30px -8px;
+        rotate: -10deg;
     }
 }

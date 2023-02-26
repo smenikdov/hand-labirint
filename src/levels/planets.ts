@@ -2,6 +2,7 @@ import { Planet } from './levelsSettings';
 import startPlanetLevels from './startPlanetLevels';
 import doublePlanetLevels from './doublePlanetLevels';
 import darkPlanetLevels from './darkPlanetLevels';
+import stopPlanetLevels from './stopPlanetLevels';
 
 let planetId: number = 0;
 const planets: Planet[] = [
@@ -14,14 +15,23 @@ const planets: Planet[] = [
 		size: '220px',
 		className: 'darkPlanet',
 	},
+	// {
+	// 	id: planetId++,
+	// 	name: 'Планета двойников',
+	// 	levels: doublePlanetLevels,
+	// 	isOpen: true,
+	// 	description: 'Хорошая планета для начала',
+	// 	size: '120px',
+	// 	className: 'doublePlanet',
+	// },
 	{
 		id: planetId++,
-		name: 'Планета двойников',
-		levels: doublePlanetLevels,
+		name: 'Планета остановок',
+		levels: stopPlanetLevels,
 		isOpen: true,
 		description: 'Хорошая планета для начала',
 		size: '120px',
-		className: 'doublePlanet',
+		className: 'stopPlanet',
 	},
 	{
 		id: planetId++,

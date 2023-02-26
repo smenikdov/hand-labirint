@@ -94,7 +94,6 @@ export default function startWatch() {
     // camera.start();
 
     if (store.getState().player.godMode) {
-        console.log('addEventListener');
         document.addEventListener('mousemove', (event) => {
             newPoint = { x: event.clientX, y: event.clientY };
         });
@@ -102,5 +101,5 @@ export default function startWatch() {
 
     setInterval(() => {
         store.dispatch(goTo(newPoint));
-    }, 1000 / 10); // 10 fps мало? Нет. За счет transition выглядит очень плавно, и с низкой нагрузкой. Большой фпс, только ухуджит
+    }, 1000 / 60); // 10 fps мало? Нет. За счет transition выглядит очень плавно, и с низкой нагрузкой. Большой фпс, только ухуджит
 };

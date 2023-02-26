@@ -5,6 +5,7 @@ $planetColors: (
     "darkPlanet": ("color1": #090231, "color2": #471616, "color3": #000),
     "doublePlanet": ("color1": $negativeColor, "color2": $positiveColor, "color3": $neutralColor),
     "startPlanet": ("color1": #18d638, "color2": #09ceff, "color3": #ffffff),
+    "stopPlanet": ("color1": #ff2600, "color2": #d1a103, "color3": hsl(51, 88%, 73%)),
 );
 
 #menu {
