@@ -64,6 +64,10 @@ $planetColor in $planetColors {
     }
 }
 
+.blocked {
+    animation: none !important;
+    box-shadow: 0 0 50px #000 !important;
+}
 
 .neonPlanet {
     @include absoluteToCenter();
@@ -71,6 +75,27 @@ $planetColor in $planetColors {
     border-radius: 50%;
     cursor: pointer;
     transition: 300ms;
+
+    .cost {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        @include strongLight($neutralColor);
+        @include bigFont();
+        background: none;
+        box-shadow: none;
+
+        .icon {
+            width: $exlgSize;
+            height: $exlgSize;
+            @include strongSvgLight($neutralColor);
+            background-image: url('../assets/img/star.svg');
+            background-size: 100% 100%;
+        }
+    }
 
     .planetLevels {
         .level {
@@ -108,4 +133,6 @@ $planetColor in $planetColors {
     border-radius: 5px;
     font-size: 14px;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
 }

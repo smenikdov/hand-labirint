@@ -10,8 +10,13 @@ export default function Chat() {
     const typedRef = useRef<Typed | null>(null);
     const chat = useSelector((state: RootState) => state.chat);
     const dispatch = useDispatch();
+    const lastMessage = chat.stack[0] || { text: '' };
 
     const showNextMessage = () => {
+        if (lastMessage.showTime) {
+            return;
+        }
+
         dispatch(removeMessage());
         if (typedRef.current) {
             // @ts-ignore
@@ -31,38 +36,57 @@ export default function Chat() {
         return () => {
             document.removeEventListener('keydown', handleKeyPressed)
         };
-    });
+    }, []);
+
+    useEffect(() => {
+        if (typedRef.current) {
+            // @ts-ignore
+            typedRef.current.reset();
+        }
+    }, [lastMessage]);
+
+    const onComplete = () => {
+        if (lastMessage.showTime) {
+            setTimeout(() => {
+                dispatch(removeMessage());
+            }, lastMessage.showTime);
+        }
+    };
 
 
     return (
-        chat.stack.length ?
-            <div id="chat">
-                <div className="header flex paLg">
-                    <h2>
-                        Мегабот-97
-                    </h2>
-                    <MegabotIcon className="icon" />
-                </div>
+        <div id="chat" style={{ opacity: chat.stack.length ? 1 : 0 }}>
+            <div className="header flex paLg">
+                <h2>
+                    Мегабот-97
+                </h2>
+                <MegabotIcon className="icon" />
+            </div>
 
-                <div className="delimiter" />
+            <div className="delimiter" />
 
-                <div className="body paLg">
-                    <Typed
-                        typedRef={(typed: Typed) => { typedRef.current = typed; }}
-                        strings={[chat.stack[0].text]}
-                        typeSpeed={40}
-                        backSpeed={100}
-                        showCursor={false}
-                    />
-                </div>
-
-                <EnterArrowIcon
-                    className="enterArrow paSm"
-                    style={{ boxSizing: 'content-box' }}
-                    onClick={showNextMessage}
+            <div className="body paLg">
+                <Typed
+                    typedRef={(typed: Typed) => { typedRef.current = typed; }}
+                    strings={[lastMessage.text]}
+                    typeSpeed={40}
+                    backSpeed={100}
+                    showCursor={false}
+                    onComplete={onComplete}
                 />
             </div>
-            :
-            null
+
+            {
+                !lastMessage.showTime
+                    ?
+                    <EnterArrowIcon
+                        className="enterArrow paSm"
+                        style={{ boxSizing: 'content-box' }}
+                        onClick={showNextMessage}
+                    />
+                    :
+                    null
+            }
+        </div>
     )
 }

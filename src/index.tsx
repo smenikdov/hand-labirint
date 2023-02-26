@@ -39,7 +39,7 @@ function App() {
 
                 <CameraInterface />
                 <Chat />
-                {/* <Player /> */}
+                <Player />
             </BrowserRouter>
         </main>
     )

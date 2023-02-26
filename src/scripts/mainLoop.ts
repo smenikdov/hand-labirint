@@ -95,7 +95,7 @@ export default function startWatch() {
 
     if (store.getState().player.godMode) {
         document.addEventListener('mousemove', (event) => {
-            newPoint = { x: event.clientX, y: event.clientY };
+            newPoint = { x: event.clientX + 5, y: event.clientY + 5 };
         });
     }
 

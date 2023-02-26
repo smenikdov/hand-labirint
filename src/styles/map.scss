@@ -52,7 +52,7 @@
                 bottom: 2px;
                 @include strongLight($negativeColor);
                 width: $wallSize;
-                height: 200px;
+                height: 300px;
                 margin-left: $wallMargin;
                 margin-right: $wallMargin;
             }
@@ -83,16 +83,21 @@
         }
 
         .star {
-            background-image: url('../assets/img/star.svg');
-            background-size: 100% 100%;
-            @include strongSvgLight($neutralColor);
+            &.active {
+                background-image: url('../assets/img/star.svg');
+                background-size: 100% 100%;
+                @include strongSvgLight($neutralColor);
+            }
+
+            &.disable {}
         }
     }
 }
 
 .battery {
     position: absolute;
-    right: -370px;
+    right: -380px;
+    margin-top: -6px;
     @include weakLight($negativeColor);
     background: none;
     border: $smSize solid $negativeColor;
@@ -153,29 +158,48 @@
 
 #darkMode {
     @include fullSize();
+    @include absoluteToCenter();
     z-index: 100;
 }
 
 #stopMode {
     @include fullSize();
+    @include absoluteToCenter();
     z-index: 100;
+}
+
+#spaceshipCanvas {
+    width: 100%;
+    height: 100%;
 }
 
 .spaceship {
     position: absolute;
-    top: 30px;
-    left: 0;
-    right: 0;
+    left: 250%;
+    top: 20px;
     margin: auto;
-    width: 180px;
-    height: 120px;
+    width: 160px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: 300ms;
-
-    animation: spaceshipFlying 9s infinite ease-in-out;
+    transition: 4s ease-in-out;
     z-index: 900;
+    animation: spaceshipFlying 9s infinite ease-in-out;
+
+    &.active {
+        left: calc(50% - 80px);
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        border-bottom: 150vh solid rgba($positiveColor, 0.1);
+        border-left: 2000px solid transparent;
+        border-right: 2000px solid transparent;
+        width: calc(50% + 4000px);
+    }
 }
 
 .spaceshipTop {
@@ -200,8 +224,8 @@
         animation: moveleft 400ms linear infinite;
 
         .ball {
-            min-height: 28px;
-            min-width: 28px;
+            min-height: 22px;
+            min-width: 22px;
             margin: 0 4px;
             border-radius: 50%;
             background: $positiveColor;
@@ -217,6 +241,7 @@
 }
 
 
+
 @keyframes moveleft {
     0% {
         transform: translate(0, 0);
@@ -226,38 +251,6 @@
         transform: translate(-20%, 0);
     }
 }
-
-@keyframes spaceshipComing {
-    0% {
-        transform: rotate(-10deg);
-        left: 200%;
-    }
-
-    35% {
-        transform: rotate(-10deg);
-    }
-
-    85% {
-        left: 45%;
-        transform: rotate(10deg);
-    }
-
-    100% {
-        left: 50%;
-        transform: rotate(0deg) translateY(0px);
-    }
-}
-
-@keyframes spaceshipLeaving {
-    0% {
-        left: 50%;
-    }
-
-    100% {
-        left: -100%;
-    }
-}
-
 
 @keyframes spaceshipFlying {
     0% {

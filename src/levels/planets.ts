@@ -10,7 +10,8 @@ const planets: Planet[] = [
 		id: planetId++,
 		name: 'Планета темноты',
 		levels: darkPlanetLevels,
-		isOpen: true,
+		isOpen: !!localStorage.getItem('darkPlanet') || false,
+		cost: 13,
 		description: 'Хорошая планета для начала',
 		size: '220px',
 		className: 'darkPlanet',
@@ -28,7 +29,8 @@ const planets: Planet[] = [
 		id: planetId++,
 		name: 'Планета остановок',
 		levels: stopPlanetLevels,
-		isOpen: true,
+		isOpen: !!localStorage.getItem('stopPlanet') || false,
+		cost: 11,
 		description: 'Хорошая планета для начала',
 		size: '120px',
 		className: 'stopPlanet',
@@ -38,11 +40,11 @@ const planets: Planet[] = [
 		name: 'Планета мироздания',
 		levels: startPlanetLevels,
 		isOpen: true,
+		cost: 0,
 		description: 'Хорошая планета для начала',
 		size: '320px',
 		className: 'startPlanet',
 	},
-
 ];
 
 export default planets;

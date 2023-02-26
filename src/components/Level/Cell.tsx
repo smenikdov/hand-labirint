@@ -4,13 +4,16 @@ import Battery from './Battery';
 
 type CellProps = {
     cellSymbol: CellSymbol,
+    state: {
+        status: 'active' | 'disable',
+    } | null,
 }
 
-function Cell({ cellSymbol }: CellProps) {
+function Cell({ cellSymbol, state }: CellProps) {
     return (
         <>
             <div
-                className={['cell', parseLab[cellSymbol]].join(' ')}
+                className={['cell', parseLab[cellSymbol], state?.status || ''].join(' ')}
             />
             {
                 cellSymbol === '1' ?

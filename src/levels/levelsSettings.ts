@@ -10,21 +10,24 @@ export const parseLab = {
     '-': 'wall horizontal',
     '|': 'wall vertical',
     '#': 'wall',
+    '~': 'empty spaceshipCell',
 };
 
-export type CellSymbol = ' ' | '1' | '0' | '┏' | '┓' | '┗' | '┛' | '-' | '|' | '★' | '#';
+export type CellSymbol = ' ' | '1' | '0' | '┏' | '┓' | '┗' | '┛' | '-' | '|' | '★' | '#' | '~';
+
+export type Character = 'megabot' | 'spaceship' | 'seller';
 
 export type Message = {
     text: string,
-    // TOOD
-    // character
+    showTime?: number,
+    character?: Character,
 }
 
 export type Level = {
-    lab: String[],
+    lab: Array<string>,
     id: number,
     title: string,
-    chat?: Message[],
+    chat?: Array<Message>,
     darkMode?: boolean,
     doubleMode?: boolean,
     stopMode?: boolean,
@@ -33,9 +36,9 @@ export type Level = {
 export type Planet = {
     id: number,
     name: string,
-    cost?: number,
+    cost: number,
     isOpen: boolean,
-    levels: Level[],
+    levels: Array<Level>,
     description?: string,
     size?: string,
     className: string,

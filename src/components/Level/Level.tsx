@@ -4,23 +4,26 @@ import Cell from './Cell';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { CellSymbol, isWall } from '../../levels/levelsSettings';
-import { addStack } from '../../store/chat';
+import { addMessage, addStack } from '../../store/chat';
 // import winSound from '../assets/mp3/win.mp3'
 // import takeCoinSound from '../assets/mp3/coin.wav'
-import { setStars, setType } from '../../store/player';
+import { addStar, setType } from '../../store/player';
 import { nextLevel } from '../../store/level';
 import DarkMode from './DarkMode';
 import StopMode from './StopMode';
-
-type Point = {
-    x: number,
-    y: number,
-}
+import { useNavigate } from 'react-router-dom';
 
 type Block = {
     x: number,
     y: number,
     size: number
+}
+
+type CellState = {
+    xIndex: number,
+    yIndex: number,
+    cell: CellSymbol,
+    status: 'active' | 'disable',
 }
 
 const checkBlocksCrossing = (
@@ -41,13 +44,70 @@ const checkBlocksCrossing = (
     const k2 = (block1Top <= block2Bottom) && (block1Bottom >= block2Top);
 
     return k1 && k2
-}
+};
+
+const createMapState = (levelLab: Array<string>): Array<CellState> => {
+    const levelState: Array<CellState> = [];
+    let yIndex = 0;
+    for (let line of levelLab) {
+        let xIndex = 0;
+        for (let cell of [...line]) {
+            if (cell === '★') {
+                levelState.push({
+                    xIndex,
+                    yIndex,
+                    cell,
+                    status: 'active',
+                });
+            }
+            xIndex++;
+        }
+        yIndex++;
+    }
+
+    return levelState
+};
+
+const getCellState = (mapState: Array<CellState>, xIndex: number, yIndex: number): CellState | null => {
+    return mapState.find(cell => cell.xIndex === xIndex && cell.yIndex === yIndex) || null
+};
+
+const changeCellState = (mapState: Array<CellState>, xIndex: number, yIndex: number, newVal: 'active' | 'disable'): Array<CellState> => {
+    const newMapState: Array<CellState> = JSON.parse(JSON.stringify(mapState));
+    const cellState = getCellState(newMapState, xIndex, yIndex);
+    if (cellState) {
+        cellState.status = newVal;
+    }
+    return newMapState;
+};
+
+// const resetMapState = (mapState: Array<CellState>): Array<CellState> => {
+//     const newMapState: Array<CellState> = JSON.parse(JSON.stringify(mapState))
+//     return newMapState.map(cellState => {
+//         if (cellState.cell === '~') {
+//             cellState.status = 'active';
+//         }
+//         return cellState
+//     })
+// };
 
 export default function Level() {
     const dispatch = useDispatch();
     const { planetId, levelId } = useSelector((state: RootState) => state.level);
     const level = planets[planetId].levels[levelId];
-    const { x: playerX, y: playerY, type: playerType } = useSelector((state: RootState) => state.player);
+    const player = useSelector((state: RootState) => state.player);
+    const [mapState, setMapState] = useState(createMapState(level.lab));
+    const [isStartSpaceshipAttack, setIsStartSpaceshipAttack] = useState(false);
+    const [canAttack, setCanAttack] = useState(true);
+    const navigate = useNavigate();
+
+    const handleKeyPressed = (event: KeyboardEvent) => {
+        if (event.key === 'Escape' && !event.repeat) {
+            event.preventDefault();
+            navigate('/');
+        }
+    };
+
     useEffect(() => {
         if (level.chat) {
             dispatch(addStack(level.chat));
@@ -55,17 +115,23 @@ export default function Level() {
     }, []);
 
     useEffect(() => {
-        const player = document.querySelector('.player') as HTMLDivElement;
-        const cell = document.querySelector('.cell') as HTMLDivElement;
-        const map = document.querySelector('#map') as HTMLDivElement;
+        document.addEventListener('keydown', handleKeyPressed);
+        return () => {
+            document.removeEventListener('keydown', handleKeyPressed)
+        };
+    }, []);
 
-        const cellSize = cell.offsetWidth;
-        const playerSize = player?.offsetWidth || 23;
+    useEffect(() => {
+        const playerDiv = document.querySelector('.player') as HTMLDivElement;
+        const cellDiv = document.querySelector('.cell') as HTMLDivElement;
+        const map = document.querySelector('#map') as HTMLDivElement;
+        const cellSize = cellDiv.offsetWidth;
+        const playerSize = playerDiv?.offsetWidth || 23;
         const { top: topMargin, left: leftMargin } = map.getBoundingClientRect();
 
         const playerBlock: Block = {
-            x: playerX,
-            y: playerY,
+            x: player.x,
+            y: player.y,
             size: playerSize,
         };
 
@@ -74,6 +140,8 @@ export default function Level() {
 
         let yIndex = 0;
         for (let line of level.lab) {
+            let isCrossSpacehip = false;
+
             let xIndex = 0;
             for (let cell of [...line]) {
                 if (cell === ' ') {
@@ -91,13 +159,41 @@ export default function Level() {
 
                 if (isCrossing) {
                     if (isWall(cell as CellSymbol)) {
+                        setCanAttack(true);
+                        setIsStartSpaceshipAttack(false);
                         dispatch(setType('positive'));
                     }
+
+                    if (cell === '★') {
+                        const cellState = getCellState(mapState, xIndex, yIndex);
+                        if (cellState?.status === 'active' && player.type === 'negative') {
+                            dispatch(addStar());
+                            setMapState(changeCellState(mapState, xIndex, yIndex, 'disable'));
+                        }
+                    }
+
+                    if (cell === '~') {
+                        if (player.type === 'negative' && !isStartSpaceshipAttack && canAttack && !isCrossSpacehip) {
+                            isCrossSpacehip = true;
+                            setCanAttack(false);
+                            dispatch(addMessage({
+                                text: 'Это звездный патруль Мировиля. Никому не двигаться! Любой движущий объект будет уничтожен!',
+                                showTime: 2000,
+                                character: 'spaceship',
+                            }));
+                            setIsStartSpaceshipAttack(true);
+                        }
+                    }
+
                     if (cell === '0') {
                         dispatch(setType('negative'));
                     }
-                    if (cell === '1' && playerType === 'negative') {
-                        console.log('you are win');
+
+                    if (cell === '1' && player.type === 'negative') {
+                        dispatch(setType('positive'));
+                        setCanAttack(true);
+                        setIsStartSpaceshipAttack(false);
+                        navigate('/');
                     }
                 }
 
@@ -105,22 +201,34 @@ export default function Level() {
             };
             yIndex++;
         };
-    }, [playerX, playerY]);
+    }, [player.x, player.y]);
 
 
     return (
         <>
-            <DarkMode isActive={!!level.darkMode} x={playerX} y={playerY} />
-            <StopMode isActive={!!level.stopMode} x={playerX} y={playerY} />
+            <DarkMode
+                isActive={!!level.darkMode}
+                x={player.x}
+                y={player.y}
+            />
+            <StopMode
+                isActive={!!level.stopMode}
+                x={player.x}
+                y={player.y}
+                isStartSpaceshipAttack={isStartSpaceshipAttack}
+                setIsStartSpaceshipAttack={setIsStartSpaceshipAttack}
+                setCanAttack={setCanAttack}
+            />
 
             <div id='map'>
-                {level.lab.map((line, rowIndex) =>
-                    <div key={`row_${rowIndex}`} className='row'>
+                {level.lab.map((line, yIndex) =>
+                    <div key={`row_${yIndex}`} className='row'>
                         {
-                            [...line].map((cell, cellIndex) =>
+                            [...line].map((cell, xIndex) =>
                                 <Cell
-                                    key={`cell_${cellIndex}`}
+                                    key={`cell_${xIndex}`}
                                     cellSymbol={cell as CellSymbol}
+                                    state={getCellState(mapState, xIndex, yIndex)}
                                 />)
                         }
                     </div>

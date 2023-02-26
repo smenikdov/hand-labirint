@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Planet as PlanetType } from '../levels/levelsSettings';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLevel, setPlanet } from '../store/level';
 import { useNavigate } from 'react-router-dom';
-
+import { BiLockAlt } from "react-icons/bi";
+import { RootState } from '../store';
+import { setStars } from '../store/player';
 interface PlanetProps {
     planetData: PlanetType,
     transform?: string,
@@ -18,6 +20,7 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     const [showTooltip, setShowTooltip] = useState(false);
     const [transformStyles, setTransformStyles] = useState<string[]>([]);
     const rotationRadius = activePlanet === id ? 200 : 40;
+    const starsCount = useSelector((state: RootState) => state.player.stars);
 
     useEffect(() => {
         const newTransformStyles = [];
@@ -45,7 +48,17 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
         event.preventDefault();
         event.stopPropagation();
-        setActivePlanet(id);
+        if (isOpen) {
+            setActivePlanet(id);
+            return;
+        }
+
+        if (cost <= starsCount) {
+            localStorage.setItem(className, 'isOpen');
+            dispatch(setStars(starsCount - cost));
+            window.location.reload();
+        }
+
     };
 
     const changeLevel = (levelId: number): void => {
@@ -66,12 +79,22 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
 
     return (
         <div
-            className={`neonPlanet ${className}`}
+            className={`neonPlanet ${className} ${isOpen ? 'isOpen' : 'blocked'}`}
             style={planetStyle}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
         >
+            {
+                !isOpen
+                    ?
+                    <div className="cost">
+                        <div>{cost}</div>
+                        <div className="icon mlSm" />
+                    </div>
+                    :
+                    null
+            }
             <div className="planetLevels">
                 {
                     levels.map((level, index) =>
@@ -93,7 +116,16 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
                 showTooltip && activePlanet === null
                     ?
                     <div className="tooltip">
-                        {name}
+                        {
+                            !isOpen
+                                ?
+                                <BiLockAlt className="mrSm" />
+                                :
+                                null
+                        }
+                        <div>
+                            {name}
+                        </div>
                     </div>
                     :
                     null
