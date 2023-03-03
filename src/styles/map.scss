@@ -131,7 +131,7 @@
     height: $lgSize;
     will-change: transform;
     z-index: 999;
-    // transition: 400ms;
+    transition: 1000ms;
 
     &.negative {
         @include strongLight($negativeColor);
@@ -157,8 +157,10 @@
 }
 
 #darkMode {
-    @include fullSize();
+    height: 200vh;
+    width: 200vw;
     @include absoluteToCenter();
+    transition: 400ms;
     z-index: 100;
 }
 

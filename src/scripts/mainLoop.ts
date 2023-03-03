@@ -2,6 +2,7 @@ import { Hands } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import store from '../store';
 import { goTo } from '../store/player';
+import {HAND_CONNECTIONS} from "@mediapipe/hands";
 // import bgSound from '../assets/mp3/bg1.mp3';
 
 type Point = {
@@ -38,8 +39,8 @@ export default function startWatch() {
 
         if (!store.getState().player.godMode && results.multiHandLandmarks) {
             for (const landmarks of results.multiHandLandmarks) {
-                //drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 1 });
-                //drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 1 });
+                // drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 1 });
+                // drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 1 });
                 let x = 0;
                 let y = 0;
                 for (let i = 5; i < 21; i++) {
@@ -51,16 +52,17 @@ export default function startWatch() {
                 }
                 x /= 16;
                 y /= 16;
-                let width = window.innerWidth * 1.4;
-                let height = window.innerHeight * 1.4;
-                x = width - x * width - 200;
-                y = y * height - 200;
+                let width = window.innerWidth;
+                let height = window.innerHeight;
+                x = width - x * width;
+                y = y * height;
 
                 if (!error) {
                     newPoint = {
                         x,
                         y,
                     };
+                    store.dispatch(goTo(newPoint));
                 } else {
                     error = false;
                 }
@@ -71,27 +73,27 @@ export default function startWatch() {
     }
 
 
-    // const hands = new Hands({
-    //     locateFile: (file) => {
-    //         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    //     }
-    // });
+    const hands = new Hands({
+        locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }
+    });
 
 
-    // hands.setOptions({
-    //     maxNumHands: 1,
-    //     modelComplexity: 1,
-    //     minDetectionConfidence: 0.5,
-    //     minTrackingConfidence: 0.5
-    // });
-    // hands.onResults(onResults);
+    hands.setOptions({
+        maxNumHands: 1,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+    });
+    hands.onResults(onResults);
 
-    // const camera = new Camera(videoElement, {
-    //     onFrame: async () => {
-    //         await hands.send({ image: videoElement });
-    //     },
-    // });
-    // camera.start();
+    const camera = new Camera(videoElement, {
+        onFrame: async () => {
+            await hands.send({ image: videoElement });
+        },
+    });
+    camera.start();
 
     if (store.getState().player.godMode) {
         document.addEventListener('mousemove', (event) => {
@@ -99,7 +101,7 @@ export default function startWatch() {
         });
     }
 
-    setInterval(() => {
-        store.dispatch(goTo(newPoint));
-    }, 1000 / 60); // 10 fps мало? Нет. За счет transition выглядит очень плавно, и с низкой нагрузкой. Большой фпс, только ухуджит
+    // setInterval(() => {
+    //     store.dispatch(goTo(newPoint));
+    // }, 1000 / 30); // 10 fps мало? Нет. За счет transition выглядит очень плавно, и с низкой нагрузкой. Большой фпс, только ухуджит
 };
