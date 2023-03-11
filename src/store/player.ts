@@ -29,7 +29,7 @@ const initialState: Player = {
     type: 'negative',
     charge: 3,
     maxCharge: 3,
-    godMode: false,
+    godMode: true,
 };
 
 const slice = createSlice({

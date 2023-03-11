@@ -2,27 +2,32 @@
 
 #chat {
     position: absolute;
-    width: $elemntWidth;
-    height: $cellSize * $cellCount / 3 * 2;
-    right: $horizontalMargin;
-    top: $verticalMapMargin;
+    width: 100vh;
+    height: 18vh;
+    bottom: 3vh;
+    left: 0;
+    right: 0;
+    margin: auto;
     @include strongLight($neutralColor);
     background: none;
     border: $wallSize solid $neutralColor;
     z-index: 200;
+    display: flex;
+
 
     .header {
-        @include bigFont();
+        @include smallFont();
 
         .icon {
             @include strongSvgLight($neutralColor);
-            height: $mdSize * 4.5;
+            height: $mdSize * 4;
         }
     }
 
     .delimiter {
         @include weakLight($neutralColor);
-        height: $smSize;
+        width: $mdSize;
+        height: 100%;
     }
 
     .body {

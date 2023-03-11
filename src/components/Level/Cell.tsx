@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import { CellSymbol, parseLab } from '../../levels/levelsSettings';
-import Battery from './Battery';
 
 type CellProps = {
     cellSymbol: CellSymbol,
@@ -11,17 +10,9 @@ type CellProps = {
 
 function Cell({ cellSymbol, state }: CellProps) {
     return (
-        <>
-            <div
-                className={['cell', parseLab[cellSymbol], state?.status || ''].join(' ')}
-            />
-            {
-                cellSymbol === '1' ?
-                    <Battery charge={0} maxCharge={5} />
-                    :
-                    null
-            }
-        </>
+        <div
+            className={['cell', parseLab[cellSymbol], state?.status || ''].join(' ')}
+        />
     )
 }
 

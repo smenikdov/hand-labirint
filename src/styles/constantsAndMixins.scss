@@ -3,6 +3,7 @@
 $negativeColor: #FD3F55;
 $positiveColor: #37B7FF;
 $neutralColor: #ffffff;
+$grayColor: #6c757d;
 
 $mdSize: 14px;
 $smSize: $mdSize / 2;
@@ -84,6 +85,11 @@ $horizontalMargin: calc(((#{100vw} - #{$mapSize}) / 2 - #{$elemntWidth}) / 2);
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+}
+
+.column {
+    flex-direction: column;
+    justify-content: center;
 }
 
 .fullWidth {

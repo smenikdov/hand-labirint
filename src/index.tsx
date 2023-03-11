@@ -9,6 +9,8 @@ import store from './store/';
 import Player from './components/Player';
 import Chat from './components/Chat';
 import Menu from './components/Menu';
+import MainCanvas from './components/MainCanvas';
+import EnemyBot from './components/Level/EnemyBot';
 import './styles/main.scss';
 import {
     BrowserRouter,
@@ -28,7 +30,6 @@ function App() {
         <main>
             <BrowserRouter>
                 <MyParticles />
-                <div id="eclipseBlock" />
 
                 <Routes>
                     <Route path="/" element={<Menu />} />
@@ -39,6 +40,8 @@ function App() {
 
                 <CameraInterface />
                 <Chat />
+                <MainCanvas />
+                {/* <EnemyBot size={5} isTarget /> */}
                 <Player />
             </BrowserRouter>
         </main>

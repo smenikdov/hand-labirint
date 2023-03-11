@@ -7,7 +7,7 @@ type DarkModeProps = {
 
 export default function DarkMode({ isActive, x, y }: DarkModeProps) {
     const style = {
-        backgroundImage: `radial-gradient(rgba(0, 0, 0, 0), #000 150px)`,
+        backgroundImage: `radial-gradient(circle at center, rgba(0, 0, 0, 0), #000 150px 150px)`,
         backgroundRepeat: 'no-repeat',
         left: `calc(${x}px - 100vw)`,
         top: `calc(${y}px - 100vh)`,

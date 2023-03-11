@@ -12,6 +12,8 @@ import { nextLevel } from '../../store/level';
 import DarkMode from './DarkMode';
 import StopMode from './StopMode';
 import { useNavigate } from 'react-router-dom';
+import ModalDialog from '../ModalDialog';
+import Button from '../Button';
 
 type Block = {
     x: number,
@@ -81,15 +83,15 @@ const changeCellState = (mapState: Array<CellState>, xIndex: number, yIndex: num
     return newMapState;
 };
 
-// const resetMapState = (mapState: Array<CellState>): Array<CellState> => {
-//     const newMapState: Array<CellState> = JSON.parse(JSON.stringify(mapState))
-//     return newMapState.map(cellState => {
-//         if (cellState.cell === '~') {
-//             cellState.status = 'active';
-//         }
-//         return cellState
-//     })
-// };
+const resetMapState = (mapState: Array<CellState>): Array<CellState> => {
+    const newMapState: Array<CellState> = JSON.parse(JSON.stringify(mapState))
+    return newMapState.map(cellState => {
+        if (cellState.cell === '~') {
+            cellState.status = 'active';
+        }
+        return cellState
+    })
+};
 
 export default function Level() {
     const dispatch = useDispatch();
@@ -99,13 +101,20 @@ export default function Level() {
     const [mapState, setMapState] = useState(createMapState(level.lab));
     const [isStartSpaceshipAttack, setIsStartSpaceshipAttack] = useState(false);
     const [canAttack, setCanAttack] = useState(true);
+    const [isLevelComplete, setLevelComplete] = useState(false);
+    const [isVisibleFinallyModal, setVisibilityFinallyModal] = useState(false);
     const navigate = useNavigate();
 
-    const handleKeyPressed = (event: KeyboardEvent) => {
-        if (event.key === 'Escape' && !event.repeat) {
-            event.preventDefault();
-            navigate('/');
-        }
+    const handleMenuGoOut = () => {
+        setVisibilityFinallyModal(false);
+        setLevelComplete(false);
+        navigate('/');
+    };
+
+    const goTonextLevel = () => {
+        setVisibilityFinallyModal(false);
+        setLevelComplete(false);
+        dispatch(nextLevel());
     };
 
     useEffect(() => {
@@ -115,13 +124,10 @@ export default function Level() {
     }, []);
 
     useEffect(() => {
-        document.addEventListener('keydown', handleKeyPressed);
-        return () => {
-            document.removeEventListener('keydown', handleKeyPressed)
-        };
-    }, []);
+        if (isLevelComplete) {
+            return;
+        }
 
-    useEffect(() => {
         const playerDiv = document.querySelector('.player') as HTMLDivElement;
         const cellDiv = document.querySelector('.cell') as HTMLDivElement;
         const map = document.querySelector('#map') as HTMLDivElement;
@@ -134,9 +140,6 @@ export default function Level() {
             y: player.y,
             size: playerSize,
         };
-
-        // console.log(1, playerX, playerY)
-        // console.log(2, player.getBoundingClientRect().left, player.getBoundingClientRect().top,)
 
         let yIndex = 0;
         for (let line of level.lab) {
@@ -193,7 +196,8 @@ export default function Level() {
                         dispatch(setType('positive'));
                         setCanAttack(true);
                         setIsStartSpaceshipAttack(false);
-                        navigate('/');
+                        setLevelComplete(true);
+                        setVisibilityFinallyModal(true);
                     }
                 }
 
@@ -201,7 +205,7 @@ export default function Level() {
             };
             yIndex++;
         };
-    }, [player.x, player.y]);
+    }, [player.x, player.y, isLevelComplete]);
 
 
     return (
@@ -234,6 +238,28 @@ export default function Level() {
                     </div>
                 )}
             </div>
+
+            <ModalDialog
+                isVisible={isVisibleFinallyModal}
+                title="Поздравляем! Уровень пройден!"
+                onClose={() => setVisibilityFinallyModal(false)}
+            >
+                <p>Вы можете начать новый уровень или вернуться в главное меню. Выберите один из вариантов, чтобы продолжить игру.</p>
+                <div className="mtMd">
+                    <Button
+                        text="Выйти в меню"
+                        dense
+                        color="gray"
+                        onClick={handleMenuGoOut}
+                    />
+
+                    <Button
+                        text="Следующий уровень"
+                        className="mlMd"
+                        onClick={goTonextLevel}
+                    />
+                </div>
+            </ModalDialog>
         </>
     );
 }

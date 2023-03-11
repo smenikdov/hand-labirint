@@ -5,9 +5,8 @@
     height: $mapSize;
     width: $mapSize;
     margin: auto;
-    top: 0;
+    top: 5vh;
     left: 0;
-    bottom: 0;
     right: 0;
 
     .row {
@@ -25,37 +24,11 @@
         .finish {
             position: relative;
             @include strongLight($negativeColor);
-            //border-radius: 50%;
-
-            &::after {
-                content: '';
-                display: block;
-                position: absolute;
-                left: 2px;
-                @include strongLight($negativeColor);
-                height: $wallSize;
-                width: 260px;
-                margin-top: $wallMargin;
-                margin-bottom: $wallMargin;
-            }
         }
 
         .start {
             position: relative;
             @include strongLight($negativeColor);
-            //border-radius: 50%;
-
-            &::after {
-                content: '';
-                display: block;
-                position: absolute;
-                bottom: 2px;
-                @include strongLight($negativeColor);
-                width: $wallSize;
-                height: 300px;
-                margin-left: $wallMargin;
-                margin-right: $wallMargin;
-            }
         }
 
         .wall {
@@ -131,7 +104,6 @@
     height: $lgSize;
     will-change: transform;
     z-index: 999;
-    transition: 1000ms;
 
     &.negative {
         @include strongLight($negativeColor);
@@ -160,7 +132,6 @@
     height: 200vh;
     width: 200vw;
     @include absoluteToCenter();
-    transition: 400ms;
     z-index: 100;
 }
 
@@ -279,4 +250,156 @@
         translate: 30px -8px;
         rotate: -10deg;
     }
+}
+
+.robot {
+    @include absoluteToCenter();
+    @include strongLight($positiveColor);
+    border-radius: 50%;
+    width: $mdSize * 4;
+    height: $mdSize * 4;
+
+    .target {
+        position: absolute;
+        top: -45%;
+        left: -45%;
+        width: 190%;
+        height: 190%;
+        border-radius: 50%;
+        border: $smSize solid rgb(230, 74, 74);
+
+        .stick {
+            position: absolute;
+            background: rgb(230, 74, 74);
+            ;
+            margin: auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: $smSize;
+            height: $smSize;
+
+            &.top {
+                bottom: auto;
+            }
+
+            &.left {
+                right: auto;
+            }
+
+            &.right {
+                left: auto;
+            }
+
+            &.bottom {
+                top: auto;
+            }
+        }
+    }
+
+    .body {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .personalNumber {
+            @include absoluteToCenter();
+            display: inline-flex;
+            vertical-align: top;
+            background: $neutralColor;
+            padding: 10%;
+            width: 60%;
+            height: 60%;
+            border-radius: $exsmSize;
+            box-sizing: border-box;
+
+            .dot {
+                &::before {
+                    content: '';
+                    width: $smSize;
+                    height: $smSize;
+                    display: block;
+                    background: $positiveColor;
+                    border-radius: 50%;
+                }
+            }
+
+            &.one {
+                justify-content: center;
+                align-items: center;
+            }
+
+            &.two {
+                justify-content: space-between;
+
+                .dot:nth-child(1) {
+                    align-self: flex-end;
+                }
+            }
+
+            &.three {
+                justify-content: space-between;
+
+                .dot:nth-child(1) {
+                    align-self: flex-end;
+                }
+
+                .dot:nth-child(2) {
+                    align-self: center;
+                }
+            }
+
+            &.four {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-content: space-between;
+
+                .dot {
+                    width: 50%;
+                }
+
+                .dot:nth-child(even)::before {
+                    margin-right: 0;
+                    margin-left: auto;
+                }
+            }
+
+            &.five {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-content: space-between;
+
+                .dot:nth-child(3) {
+                    width: 100%;
+
+                    &::before {
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+            }
+        }
+
+        .belt1 {
+            @include absoluteToCenter();
+            background: $neutralColor;
+            height: $mdSize;
+            width: 120%;
+            margin-left: -10%;
+            border-radius: $exsmSize;
+            transform: rotate(45deg);
+        }
+
+        .belt2 {
+            @include absoluteToCenter();
+            background: $neutralColor;
+            width: $mdSize;
+            height: 120%;
+            margin-top: -10%;
+            border-radius: $exsmSize;
+            transform: rotate(45deg);
+        }
+    }
+
 }

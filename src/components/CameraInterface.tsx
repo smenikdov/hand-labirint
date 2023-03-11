@@ -1,20 +1,38 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import levels from '../levels/planets'
 import LevelNumber from './Level/LevelNumber'
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { setTime } from '../store/timer';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ModalDialog from './ModalDialog';
+import Button from './Button';
 
 export default function LevelMenu() {
+    const [isVisibleMenu, setVisibilityMenu] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const coinsCount = useSelector((state: RootState) => state.player.coins);
     const starsCount = useSelector((state: RootState) => state.player.stars);
 
-    const handleMenuClick = () => {
+    const handleMenuGoOut = () => {
+        setVisibilityMenu(false);
         navigate('/');
     };
+
+    const handleKeyPressed = (event: KeyboardEvent) => {
+        if (event.key === 'Escape' && !event.repeat && location.pathname === '/game') {
+            setVisibilityMenu(true);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyPressed);
+        return () => {
+            document.removeEventListener('keydown', handleKeyPressed)
+        };
+    }, [location]);
+
 
     // const dispatch = useDispatch();
     // const levelId = useSelector((state: RootState) => state.level.id);
@@ -61,7 +79,7 @@ export default function LevelMenu() {
                     ?
                     <div
                         id="menuButton"
-                        onClick={handleMenuClick}
+                        onClick={() => setVisibilityMenu(true)}
                         className="flex paSm"
                     >
                         <div />
@@ -88,6 +106,36 @@ export default function LevelMenu() {
                     </div>
                 </div>
             </div>
+
+            <ModalDialog
+                isVisible={isVisibleMenu}
+                title="Меню"
+                onClose={() => setVisibilityMenu(false)}
+                width={400}
+            >
+                <div className="flex column">
+                    <Button
+                        text="Продолжить игру"
+                        dense
+                        color="gray"
+                        onClick={() => setVisibilityMenu(false)}
+                    />
+                    <Button
+                        text="Настройки"
+                        dense
+                        color="gray"
+                        className="mtMd"
+                        onClick={() => { }}
+                    />
+                    <Button
+                        text="Выйти в меню"
+                        dense
+                        color="negative"
+                        className="mtMd"
+                        onClick={handleMenuGoOut}
+                    />
+                </div>
+            </ModalDialog>
         </>
     )
 }

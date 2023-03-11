@@ -1,0 +1,67 @@
+@import 'constantsAndMixins.scss';
+
+.button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: $smSize;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+    border: none;
+    font-family: 'Inter', sans-serif;
+
+    &.negative {
+        color: #ffffff;
+        background-color: $negativeColor;
+
+        &:hover {
+            background-color: darken($negativeColor, 10%);
+        }
+    }
+
+    &.positive {
+        color: #ffffff;
+        background-color: $positiveColor;
+
+        &:hover {
+            background-color: darken($positiveColor, 10%);
+        }
+    }
+
+    &.gray {
+        color: #ffffff;
+        background-color: $grayColor;
+
+        &:hover {
+            background-color: darken($grayColor, 10%);
+        }
+    }
+
+    &.dense {
+        background-color: transparent;
+
+        &.negative {
+            color: $negativeColor;
+
+            &:hover {
+                background-color: rgba($negativeColor, 0.2);
+            }
+        }
+
+        &.positive {
+            color: $positiveColor;
+
+            &:hover {
+                background-color: rgba($positiveColor, 0.2);
+            }
+        }
+
+        &.gray {
+            color: $grayColor;
+
+            &:hover {
+                background-color: rgba($grayColor, 0.2);
+            }
+        }
+    }
+}

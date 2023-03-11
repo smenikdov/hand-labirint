@@ -3,9 +3,12 @@ import { Planet as PlanetType } from '../levels/levelsSettings';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLevel, setPlanet } from '../store/level';
 import { useNavigate } from 'react-router-dom';
-import { BiLockAlt } from "react-icons/bi";
+import { BiLockAlt } from 'react-icons/bi';
 import { RootState } from '../store';
 import { setStars } from '../store/player';
+import ModalDialog from '../components/ModalDialog';
+import Button from './Button';
+
 interface PlanetProps {
     planetData: PlanetType,
     transform?: string,
@@ -21,6 +24,7 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     const [transformStyles, setTransformStyles] = useState<string[]>([]);
     const rotationRadius = activePlanet === id ? 200 : 40;
     const starsCount = useSelector((state: RootState) => state.player.stars);
+    const [isVisibleBuyModal, setVisibilityBuyModal] = useState(false);
 
     useEffect(() => {
         const newTransformStyles = [];
@@ -37,14 +41,6 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
         setTransformStyles(newTransformStyles);
     }, [activePlanet]);
 
-    const handleMouseEnter = (): void => {
-        setShowTooltip(true);
-    };
-
-    const handleMouseLeave = (): void => {
-        setShowTooltip(false);
-    };
-
     const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
         event.preventDefault();
         event.stopPropagation();
@@ -53,12 +49,19 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
             return;
         }
 
-        if (cost <= starsCount) {
-            localStorage.setItem(className, 'isOpen');
-            dispatch(setStars(starsCount - cost));
-            window.location.reload();
-        }
+        setVisibilityBuyModal(true);
+    };
 
+    const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setVisibilityBuyModal(false);
+    }
+
+    const handleUnlockPlanet = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setVisibilityBuyModal(false);
     };
 
     const changeLevel = (levelId: number): void => {
@@ -81,20 +84,18 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
         <div
             className={`neonPlanet ${className} ${isOpen ? 'isOpen' : 'blocked'}`}
             style={planetStyle}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
             onClick={handleClick}
         >
             {
-                !isOpen
-                    ?
-                    <div className="cost">
-                        <div>{cost}</div>
-                        <div className="icon mlSm" />
-                    </div>
-                    :
-                    null
+                !isOpen &&
+                <div className="cost">
+                    <div>{cost}</div>
+                    <div className="icon mlSm" />
+                </div>
             }
+
             <div className="planetLevels">
                 {
                     levels.map((level, index) =>
@@ -112,24 +113,43 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
                     )
                 }
             </div>
+
             {
-                showTooltip && activePlanet === null
-                    ?
-                    <div className="tooltip">
-                        {
-                            !isOpen
-                                ?
-                                <BiLockAlt className="mrSm" />
-                                :
-                                null
-                        }
-                        <div>
-                            {name}
-                        </div>
+                showTooltip && activePlanet === null &&
+                <div className="tooltip">
+                    {
+                        !isOpen
+                            ?
+                            <BiLockAlt className="mrSm" />
+                            :
+                            null
+                    }
+                    <div>
+                        {name}
                     </div>
-                    :
-                    null
+                </div>
             }
+
+            <ModalDialog
+                isVisible={isVisibleBuyModal}
+                title="Разблокировать уровень"
+                onClose={handleClose}
+            >
+                <p>Вы действительно хотите разблокировать этот уровень?</p>
+                <div className="modalButtons mtMd">
+                    <Button
+                        text="Отмена"
+                        dense
+                        color="gray"
+                        className="mrMd"
+                        onClick={handleClose}
+                    />
+                    <Button
+                        text="Разблокировать"
+                        onClick={handleUnlockPlanet}
+                    />
+                </div>
+            </ModalDialog>
         </div>
     )
 }
