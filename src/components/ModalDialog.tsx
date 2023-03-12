@@ -6,7 +6,7 @@ interface ModalProps {
     isVisible: boolean;
     title: string,
     children: ReactNode;
-    onClose: (event: React.MouseEvent<HTMLElement>) => void;
+    onClose?: (event: React.MouseEvent<HTMLElement>) => void;
     width?: number;
 }
 
@@ -20,9 +20,12 @@ const Modal = ({ isVisible, children, onClose, title, width = 600 }: ModalProps)
                 <div className="modalContent">
                     <div className="modalHeader mbMd">
                         <h2 className="modalTitle">{title}</h2>
-                        <button className="closeButton" onClick={onClose}>
-                            <BiX size="1.3em" />
-                        </button>
+                        {
+                            onClose &&
+                            <button className="closeButton" onClick={onClose}>
+                                <BiX size="1.3em" />
+                            </button>
+                        }
                     </div>
                     <div className="modalBody">{children}</div>
                 </div>

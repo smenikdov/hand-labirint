@@ -1,4 +1,4 @@
-import { Planet } from './levelsSettings';
+import { Planet } from '../scripts/types';
 import startPlanetLevels from './startPlanetLevels';
 import doublePlanetLevels from './doublePlanetLevels';
 import darkPlanetLevels from './darkPlanetLevels';

@@ -1,5 +1,5 @@
 import React from 'react'
-import { setLevel } from '../../store/level';
+import { setLevel } from '../../store/game';
 import { useDispatch } from 'react-redux';
 
 type LevelNumberProps = {

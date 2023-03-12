@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { Message } from '../levels/levelsSettings';
+import { Message } from '../scripts/types';
 
 interface Chat {
     stack: Message[],
-}
+};
 
 const initialState: Chat = {
     stack: [],

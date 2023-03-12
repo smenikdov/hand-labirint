@@ -9,7 +9,6 @@ type LastPosition = {
 
 const SIZE = 20;
 const lastPositions: Array<LastPosition> = [];
-const rand = (start: number, end: number): number => Math.random() * (end - start + 1) + start;
 
 
 export default function MainCanvas() {

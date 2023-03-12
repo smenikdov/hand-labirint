@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import { CellSymbol, parseLab } from '../../levels/levelsSettings';
+import { CellSymbol, parseLab } from '../../scripts/types';
 
 type CellProps = {
     cellSymbol: CellSymbol,
     state: {
-        status: 'active' | 'disable',
-    } | null,
+        status?: 'active' | 'disable',
+    },
 }
 
 function Cell({ cellSymbol, state }: CellProps) {

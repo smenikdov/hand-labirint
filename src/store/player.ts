@@ -1,22 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
-
+import { Point, Bullet, NewPlayerData, Enemy } from '../scripts/types';
 interface Player {
     stars: number,
     coins: number,
     x: number,
     y: number,
-    prevX: number,
-    prevY: number,
     type: 'positive' | 'negative',
-    charge: number,
-    maxCharge: number,
     godMode: boolean,
-}
-
-interface Point {
-    x: number,
-    y: number,
+    bullets: Array<Bullet>,
+    enemies: Array<Enemy>,
+    angle: number,
+    isFist: boolean,
+    isReload: boolean,
 }
 
 const initialState: Player = {
@@ -24,12 +20,13 @@ const initialState: Player = {
     coins: parseInt(localStorage.getItem('coins') || '0'),
     x: 50,
     y: 50,
-    prevX: 50,
-    prevY: 50,
     type: 'negative',
-    charge: 3,
-    maxCharge: 3,
     godMode: true,
+    bullets: [],
+    enemies: [],
+    angle: 0,
+    isFist: false,
+    isReload: true,
 };
 
 const slice = createSlice({
@@ -37,6 +34,14 @@ const slice = createSlice({
     initialState,
 
     reducers: {
+        updateBullets(player, action: PayloadAction<Array<Bullet>>) {
+            player.bullets = action.payload;
+        },
+
+        setReload(player, action: PayloadAction<boolean>) {
+            player.isReload = action.payload;
+        },
+
         setType(player, action: PayloadAction<'positive' | 'negative'>) {
             player.type = action.payload;
         },
@@ -67,14 +72,22 @@ const slice = createSlice({
 
         goTo(player, action: PayloadAction<Point>) {
             const { x, y } = action.payload;
-            player.prevX = player.x;
-            player.prevY = player.y;
             player.x = x;
             player.y = y;
+        },
+
+        playerUpdate(player, action: PayloadAction<NewPlayerData>) {
+            const { x, y, bullets, enemies, angle, isFist } = action.payload;
+            player.x = x;
+            player.y = y;
+            player.bullets = bullets;
+            player.enemies = enemies;
+            player.angle = angle;
+            player.isFist = isFist;
         },
     }
 });
 
 export default slice.reducer;
-const { setStars, setCoins, goTo, setType, addStar, addCoin, } = slice.actions;
-export { setStars, setCoins, goTo, setType, addStar, addCoin, };
+const { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, } = slice.actions;
+export { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, };

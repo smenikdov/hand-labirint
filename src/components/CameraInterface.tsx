@@ -7,9 +7,11 @@ import { setTime } from '../store/timer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ModalDialog from './ModalDialog';
 import Button from './Button';
+import { ReactComponent as CameraArrow } from '../assets/img/cameraArrow.svg';
 
 export default function LevelMenu() {
     const [isVisibleMenu, setVisibilityMenu] = useState(false);
+    const [isVisibleCamera, setVisibilityCamera] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
     const coinsCount = useSelector((state: RootState) => state.player.coins);
@@ -22,7 +24,7 @@ export default function LevelMenu() {
 
     const handleKeyPressed = (event: KeyboardEvent) => {
         if (event.key === 'Escape' && !event.repeat && location.pathname === '/game') {
-            setVisibilityMenu(true);
+            setVisibilityMenu(!isVisibleMenu);
         }
     };
 
@@ -31,7 +33,7 @@ export default function LevelMenu() {
         return () => {
             document.removeEventListener('keydown', handleKeyPressed)
         };
-    }, [location]);
+    }, [location, isVisibleMenu]);
 
 
     // const dispatch = useDispatch();
@@ -89,8 +91,24 @@ export default function LevelMenu() {
                     null
             }
             <div id="cameraInterface">
-                <canvas id="outputCanvas" />
-                <video id="inputVideo" className="displayNone" />
+                <canvas
+                    id="outputCanvas"
+                    style={{ translate: isVisibleCamera ? '0 0 ' : '-100% 0' }}
+                />
+                <video
+                    id="inputVideo"
+                    className="displayNone"
+                />
+                <div
+                    className="hideCameraButton"
+                    style={{
+                        rotate: isVisibleCamera ? '180deg' : '0deg',
+                        right: isVisibleCamera ? '-42px' : 'calc(100% - 42px)',
+                    }}
+                    onClick={() => setVisibilityCamera(!isVisibleCamera)}
+                >
+                    <CameraArrow />
+                </div>
                 <div className="flex own mtSm mlLg">
                     <div className="flex coinsCount">
                         <div className="count">

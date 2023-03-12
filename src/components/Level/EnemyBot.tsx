@@ -1,8 +1,11 @@
 import React from 'react'
 
 type EnemyBotProps = {
-    size: 1 | 2 | 3 | 4 | 5,
+    targetNumber: 1 | 2 | 3 | 4 | 5,
     isTarget?: boolean,
+    style: {
+        [key: string]: string;
+    },
 };
 const getClass = {
     '1': 'one',
@@ -13,9 +16,9 @@ const getClass = {
 };
 
 
-export default function EnemyBot({ size, isTarget = false }: EnemyBotProps) {
+export default function EnemyBot({ targetNumber, isTarget = false, style }: EnemyBotProps) {
     return (
-        <div className="robot">
+        <div className="robot" style={style}>
             {
                 isTarget &&
                 <div className="target">
@@ -30,10 +33,13 @@ export default function EnemyBot({ size, isTarget = false }: EnemyBotProps) {
             <div className="body">
                 <div className="belt1" />
                 <div className="belt2" />
-                <div className={`personalNumber ${getClass[size]}`}>
+                <div className={`personalNumber ${getClass[targetNumber]}`}>
                     {
-                        [...'#'.repeat(size)].map((_, index) =>
-                            <div className="dot" />
+                        [...'#'.repeat(targetNumber)].map((_, index) =>
+                            <div
+                                key={index}
+                                className="dot"
+                            />
                         )
                     }
                 </div>

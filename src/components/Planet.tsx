@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Planet as PlanetType } from '../levels/levelsSettings';
+import { Planet as PlanetType } from '../scripts/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLevel, setPlanet } from '../store/level';
+import { setLevel, setPlanet } from '../store/game';
 import { useNavigate } from 'react-router-dom';
 import { BiLockAlt } from 'react-icons/bi';
 import { RootState } from '../store';

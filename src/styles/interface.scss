@@ -11,6 +11,19 @@
         width: 100%;
         height: $elemntWidth / 4 * 3;
         background: $neutralColor;
+        transition: 300ms;
+    }
+
+    .hideCameraButton {
+        position: absolute;
+        transition: 300ms;
+        height: 46px;
+        padding: 10px 15px;
+        top: 0;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     }
 
     .own {

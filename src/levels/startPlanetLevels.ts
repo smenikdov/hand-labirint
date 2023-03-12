@@ -1,9 +1,9 @@
-import { Level } from './levelsSettings';
+import { Level } from '../scripts/types';
 
 let levels: Level[] = []
 let levelId: number = 0;
 
-levels.push({
+levels.push(new Level({
     lab: [
         '#--------------#',
         '| 0            |',
@@ -22,7 +22,6 @@ levels.push({
         '|              |',
         '#--------------#',
     ],
-    id: levelId++,
     title: 'Ну поехали!',
     chat: [
         {
@@ -38,9 +37,9 @@ levels.push({
             text: 'Волшебник, мать его....',
         }
     ],
-});
+}));
 
-levels.push({
+levels.push(new Level({
     lab: [
         '################',
         '# 0  #         #',
@@ -59,11 +58,10 @@ levels.push({
         '#              #',
         '################',
     ],
-    id: levelId++,
     title: 'Ну поехали!',
-});
+}));
 
-levels.push({
+levels.push(new Level({
     lab: [
         '################',
         '# 0            #',
@@ -82,8 +80,7 @@ levels.push({
         '# ★  #         #',
         '################',
     ],
-    id: levelId++,
     title: 'Ну поехали!',
-});
+}));
 
 export default levels;

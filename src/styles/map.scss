@@ -107,24 +107,45 @@
 
     &.negative {
         @include strongLight($negativeColor);
+
+        .triangle {
+            @include strongSvgLight($negativeColor);
+            border-color: transparent transparent transparent $negativeColor;
+        }
     }
 
     &.positive {
         @include strongLight($positiveColor);
+
+        .triangle {
+            @include strongSvgLight($positiveColor);
+            border-color: transparent transparent transparent $positiveColor;
+        }
     }
 
-    .rotateBlock {
-        height: 100%;
-        position: relative;
-        // animation: rotationAnimation 3s infinite linear;
+    .triangle {
+        @include absoluteToCenter();
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 8px 0 8px 10px;
+    }
+}
 
-        .charge {
-            @include absoluteToCenter();
-            border-radius: 50%;
-            width: $mdSize;
-            height: $mdSize;
-            @include strongLight($negativeColor);
-        }
+.playerBullet {
+    position: absolute;
+    border-radius: 50%;
+    width: $smSize;
+    height: $smSize;
+    will-change: transform;
+    z-index: 999;
+
+    &.negative {
+        @include strongLight($negativeColor);
+    }
+
+    &.positive {
+        @include strongLight($positiveColor);
     }
 }
 
@@ -253,7 +274,9 @@
 }
 
 .robot {
-    @include absoluteToCenter();
+    position: absolute;
+    will-change: transform;
+    z-index: 999;
     @include strongLight($positiveColor);
     border-radius: 50%;
     width: $mdSize * 4;
