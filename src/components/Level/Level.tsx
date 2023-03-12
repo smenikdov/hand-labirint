@@ -52,6 +52,10 @@ export default function Level() {
                 setCanAttack={setCanAttack}
             /> */}
 
+            <h1 className="levelTitle">
+                {level.title}
+            </h1>
+
             <div id='map'>
                 {level.lab.map((line, yIndex) =>
                     <div key={`row_${yIndex}`} className='row'>

@@ -1,6 +1,6 @@
 import { Level } from '../scripts/types';
 
-let levels: Level[] = []
+let levels: Level[] = [];
 
 levels.push(new Level({
     lab: [

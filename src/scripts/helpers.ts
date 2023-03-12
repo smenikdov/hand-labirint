@@ -94,7 +94,6 @@ export const shiftEnemies = (enemies: Array<Enemy>, player: Point): Array<Enemy>
     const ENEMY_SPEED = 3;
     const newEnemies = enemies.map(({ x, y, id, targetNumber }) => {
         const angle = calcAngle({ x, y }, player);
-        console.log(angle)
         return {
             x: x - ENEMY_SPEED * Math.cos(angle),
             y: y - ENEMY_SPEED * Math.sin(angle),
