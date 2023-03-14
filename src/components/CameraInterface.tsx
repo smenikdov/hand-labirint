@@ -109,6 +109,9 @@ export default function LevelMenu() {
                 >
                     <CameraArrow />
                 </div>
+                <div className="hideCameraText">
+                    Камера все еще ведет съемку
+                </div>
                 <div className="flex own mtSm mlLg">
                     <div className="flex coinsCount">
                         <div className="count">

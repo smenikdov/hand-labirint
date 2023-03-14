@@ -37,6 +37,7 @@ export interface LevelParams {
     darkMode?: boolean,
     doubleMode?: boolean,
     stopMode?: boolean,
+    enemyMode?: boolean,
 };
 
 
@@ -49,6 +50,7 @@ export class Level {
     public readonly darkMode: boolean;
     public readonly doubleMode: boolean;
     public readonly stopMode: boolean;
+    public readonly enemyMode: boolean;
 
     constructor({
         lab,
@@ -56,7 +58,8 @@ export class Level {
         chat = [],
         darkMode = false,
         doubleMode = false,
-        stopMode = false
+        stopMode = false,
+        enemyMode = false,
     }: LevelParams) {
         Level.lastId++;
         this.id = Level.lastId;
@@ -66,6 +69,7 @@ export class Level {
         this.darkMode = darkMode;
         this.doubleMode = doubleMode;
         this.stopMode = stopMode;
+        this.enemyMode = enemyMode;
     }
 
     forEachCell(callback: (symbol: CellSymbol, x: number, y: number) => void) {
@@ -93,6 +97,7 @@ export type Landmarks = Point[];
 
 export interface Block extends Point {
     size: number,
+    format: 'circle' | 'square',
 };
 
 export interface Bullet extends Point {
@@ -116,4 +121,9 @@ export interface NewPlayerData extends Point {
 export interface Enemy extends Point {
     id: number,
     targetNumber: 1 | 2 | 3 | 4 | 5,
+    status: 'dead' | 'alive',
+};
+
+export interface PointWithType extends Point {
+    type: 'negative' | 'positive',
 };

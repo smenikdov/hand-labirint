@@ -1,14 +1,20 @@
 import { Hands } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import store from '../store';
-import { addStar } from '../store/player';
+import { addStar, deleteEnemy } from '../store/player';
 import { changeCellInfo, endLevel } from '../store/game';
 import { selectLevel } from '../store';
 import { Point, FingersData, NewPlayerData, Block, CellSymbol } from '../scripts/types';
 import { playerUpdate, setReload, setType } from '../store/player';
 import * as hp from '../scripts/helpers';
 
-const FPS = 50;
+let FPS = 50;
+let resultsCount = 0;
+
+setInterval(() => {
+    FPS = resultsCount;
+    resultsCount = 0;
+}, 1000);
 
 interface Results {
     image: CanvasImageSource,
@@ -67,27 +73,29 @@ export default function startWatch() {
     }
 
 
-    // const hands = new Hands({
-    //     locateFile: (file) => {
-    //         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    //     }
-    // });
+    const hands = new Hands({
+        locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }
+    });
 
+    hands.setOptions({
+        maxNumHands: 1,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+    });
 
-    // hands.setOptions({
-    //     maxNumHands: 1,
-    //     modelComplexity: 1,
-    //     minDetectionConfidence: 0.5,
-    //     minTrackingConfidence: 0.5
-    // });
-    // hands.onResults(onResults);
+    hands.onResults(onResults);
 
-    // const camera = new Camera(videoElement, {
-    //     onFrame: async () => {
-    //         await hands.send({ image: videoElement });
-    //     },
-    // });
-    // camera.start();
+    const camera = new Camera(videoElement, {
+        onFrame: async () => {
+            maonLoop();
+            await hands.send({ image: videoElement });
+            maonLoop();
+        },
+    });
+    camera.start();
 
     if (store.getState().player.godMode) {
         let isMouseDown = false;
@@ -121,15 +129,16 @@ export default function startWatch() {
         });
     }
 
-    setInterval(() => {
+    function maonLoop() {
+        resultsCount++;
         const state = store.getState();
         const player = state.player;
         const game = state.game;
-        const isLevelActive = !game.isLevelComplete && /game/.test(window.location.pathname);
+        const isLevelActive = !game.isLevelComplete && /game/.test(window.location.pathname) && game.levelInfo.length;
         const level = selectLevel(state);
         const angle = hp.calcAverageAngle(fingersData.lastAngles);
         const isFist = Math.round(hp.calcAverage(fingersData.lastFingersCounts)) === 4;
-        const souldGenerateEnemyBot = newPlayerData.enemies.length < 15 && Math.random() < 1 / 10 / FPS;
+        const souldGenerateEnemyBot = level.enemyMode && newPlayerData.enemies.length < 15 && Math.random() < 1 / 10 / FPS;
 
         newPlayerData.x = player.x + (fingersData.x - player.x) / 10;
         newPlayerData.y = player.y + (fingersData.y - player.y) / 10;
@@ -137,12 +146,60 @@ export default function startWatch() {
         newPlayerData.angle = angle;
         newPlayerData.bullets = hp.shiftBullets(player.bullets);
         newPlayerData.enemies = hp.shiftEnemies(player.enemies, player);
-        if (isLevelActive && souldGenerateEnemyBot) {
+
+        if (newPlayerData.enemies.length) {
+            const enemyDiv = document.querySelector('.robot') as HTMLDivElement;
+            const enemySize = enemyDiv.offsetWidth;
+            newPlayerData.enemies.forEach(enemy => {
+                const enemyBlock: Block = {
+                    x: enemy.x,
+                    y: enemy.y,
+                    size: enemySize,
+                    format: 'circle',
+                };
+
+                newPlayerData.bullets.forEach(bullet => {
+                    const bulletDiv = document.querySelector('.playerBullet') as HTMLDivElement;
+                    const bulletSize = bulletDiv.offsetWidth;
+                    const bulletBlock: Block = {
+                        x: bullet.x,
+                        y: bullet.y,
+                        size: bulletSize,
+                        format: 'circle',
+                    };
+
+                    const isCrossing = hp.checkBlocksCrossing(bulletBlock, enemyBlock);
+                    if (isCrossing) {
+                        enemy.status = 'dead';
+
+                        setTimeout(() => {
+                            store.dispatch(deleteEnemy(enemy.id));
+                        }, 10000);
+                    }
+                });
+
+                const playerDiv = document.querySelector('.player') as HTMLDivElement;
+                const playerSize = playerDiv.offsetWidth;
+                const playerBlock: Block = {
+                    x: player.x,
+                    y: player.y,
+                    size: playerSize,
+                    format: 'circle',
+                };
+                const isCrossing = hp.checkBlocksCrossing(enemyBlock, playerBlock);
+                if (isCrossing) {
+                    store.dispatch(setType('positive'));
+                }
+            });
+        }
+
+        if (isLevelActive && souldGenerateEnemyBot && player.type === 'negative') {
             newPlayerData.enemies.push({
                 x: -100,
                 y: -100,
                 id: enemyId++,
                 targetNumber: Math.floor(hp.rand(1, 5)) as 1 | 2 | 3 | 4 | 5,
+                status: 'alive',
             });
         }
 
@@ -159,8 +216,8 @@ export default function startWatch() {
                 store.dispatch(setReload(true));
             }, 3000);
         }
-        store.dispatch(playerUpdate(newPlayerData));
 
+        store.dispatch(playerUpdate(newPlayerData));
 
         if (!isLevelActive || game.isLevelComplete) {
             return;
@@ -170,13 +227,14 @@ export default function startWatch() {
         const cellDiv = document.querySelector('.cell') as HTMLDivElement;
         const map = document.querySelector('#map') as HTMLDivElement;
         const cellSize = cellDiv.offsetWidth;
-        const playerSize = playerDiv?.offsetWidth || 23;
+        const playerSize = playerDiv.offsetWidth;
         const { top: topMargin, left: leftMargin } = map.getBoundingClientRect();
 
         const playerBlock: Block = {
             x: player.x,
             y: player.y,
             size: playerSize,
+            format: 'circle',
         };
 
         level.forEachCell((cell, xIndex, yIndex) => {
@@ -188,6 +246,7 @@ export default function startWatch() {
                 x: xIndex * cellSize + leftMargin,
                 y: yIndex * cellSize + topMargin,
                 size: cellSize,
+                format: 'square',
             };
 
             const isCrossing = hp.checkBlocksCrossing(cellBlock, playerBlock);
@@ -234,5 +293,5 @@ export default function startWatch() {
                 }
             }
         });
-    }, 1000 / FPS);
+    };
 }

@@ -1,7 +1,8 @@
-import { Point, Landmarks, Bullet, CellSymbol, Block, Enemy } from '../scripts/types';
+import { Point, Landmarks, Bullet, CellSymbol, Block, Enemy, PointWithType } from '../scripts/types';
 
 export const isVerticalRevert = (landmarks: Landmarks) => landmarks[9].y > landmarks[0].y;
 export const isHorizontalRevert = (landmarks: Landmarks) => landmarks[17].x > landmarks[5].x;
+export const deepCopy = (val: any): any => JSON.parse(JSON.stringify(val));
 
 export const calcFingersCount = (landmarks: Landmarks): number => {
     const fingerIndexes: Array<Array<number>> = [[8, 6], [12, 10], [16, 14], [20, 18]];
@@ -86,24 +87,30 @@ export const shiftBullets = (bullets: Array<Bullet>): Array<Bullet> => {
     });
 
     return newBullets.filter(({ x, y }) => {
-        return x >= -100 && x <= window.innerWidth + 1000 && y >= -100 && y <= window.innerHeight + 100;
+        return x >= -100 && x <= window.innerWidth + 100 && y >= -100 && y <= window.innerHeight + 100;
     });
 };
 
-export const shiftEnemies = (enemies: Array<Enemy>, player: Point): Array<Enemy> => {
-    const ENEMY_SPEED = 3;
-    const newEnemies = enemies.map(({ x, y, id, targetNumber }) => {
-        const angle = calcAngle({ x, y }, player);
-        return {
-            x: x - ENEMY_SPEED * Math.cos(angle),
-            y: y - ENEMY_SPEED * Math.sin(angle),
-            id,
-            targetNumber,
-        }
+export const shiftEnemies = (enemies: Array<Enemy>, player: PointWithType): Array<Enemy> => {
+    const ENEMY_SPEED = 1;
+    const newEnemies = enemies.map((enemy) => {
+        const newEnemy = deepCopy(enemy);
+        if (newEnemy.status === 'alive') {
+            const angle = calcAngle(newEnemy, player);
+            newEnemy.x += ENEMY_SPEED * Math.cos(angle) * (player.type === 'negative' ? -1 : 1);
+            newEnemy.y += ENEMY_SPEED * Math.sin(angle) * (player.type === 'negative' ? -1 : 1);
+        };
+        return newEnemy;
     });
 
-    return newEnemies
-}
+    if (player.type === 'positive') {
+        return newEnemies.filter(({ x, y }) => {
+            return x >= -100 && x <= window.innerWidth + 100 && y >= -100 && y <= window.innerHeight + 100;
+        });
+    } else {
+        return newEnemies
+    }
+};
 
 export const isWall = (cell: CellSymbol): boolean => {
     if (['┏', '┓', '┗', '┛', '-', '|', '#'].includes(cell)) {
@@ -114,23 +121,31 @@ export const isWall = (cell: CellSymbol): boolean => {
 };
 
 export const checkBlocksCrossing = (
-    { x: x1, y: y1, size: size1 }: Block,
-    { x: x2, y: y2, size: size2 }: Block
+    { x: x1, y: y1, size: size1, format: format1, }: Block,
+    { x: x2, y: y2, size: size2, format: format2, }: Block
 ): boolean => {
-    let block1Left = x1;
-    let block1Right = x1 + size1;
-    let block1Top = y1;
-    let block1Bottom = y1 + size1;
 
-    let block2Left = x2;
-    let block2Right = x2 + size2;
-    let block2Top = y2;
-    let block2Bottom = y2 + size2;
+    if (format1 === 'square' || format2 === 'square') {
+        const block1Left = x1;
+        const block1Right = x1 + size1;
+        const block1Top = y1;
+        const block1Bottom = y1 + size1;
 
-    const k1 = (block1Left <= block2Right) && (block1Right >= block2Left);
-    const k2 = (block1Top <= block2Bottom) && (block1Bottom >= block2Top);
+        const block2Left = x2;
+        const block2Right = x2 + size2;
+        const block2Top = y2;
+        const block2Bottom = y2 + size2;
 
-    return k1 && k2
+        const k1 = (block1Left <= block2Right) && (block1Right >= block2Left);
+        const k2 = (block1Top <= block2Bottom) && (block1Bottom >= block2Top);
+
+        return k1 && k2
+    } else {
+        const distanceX = x1 - x2;
+        const distanceY = y1 - y2;
+        const radiusSum = size1 / 2 + size2 / 2;
+        return Math.sqrt(distanceX * distanceX + distanceY * distanceY) <= radiusSum;
+    }
 };
 
 export const rand = (start: number, end: number): number => Math.random() * (end - start + 1) + start;

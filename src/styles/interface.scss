@@ -26,6 +26,16 @@
         }
     }
 
+    .hideCameraText {
+        position: absolute;
+        z-index: -1;
+        font-size: 12px;
+        rotate: 90deg;
+        translate: calc(-50% + 15px) 0;
+        left: 0;
+        bottom: 50%;
+    }
+
     .own {
         @include strongLight($neutralColor);
         @include bigFont();

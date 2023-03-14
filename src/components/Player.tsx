@@ -49,7 +49,7 @@ export default function Player() {
                     <EnemyBot
                         key={enemy.id}
                         style={getCoordinates(enemy)}
-                        targetNumber={enemy.targetNumber}
+                        data={enemy}
                     />
                 ))
             }

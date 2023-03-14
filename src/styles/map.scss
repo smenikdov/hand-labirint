@@ -14,6 +14,33 @@
     }
 }
 
+@keyframes flyingStar {
+    0% {
+        translate: 7px -7px;
+        rotate: -8deg;
+    }
+
+    25% {
+        translate: -7px -7px;
+        rotate: 8deg;
+    }
+
+    50% {
+        translate: 7px 7px;
+        rotate: -8deg;
+    }
+
+    75% {
+        translate: -7px 7px;
+        rotate: 8deg;
+    }
+
+    100% {
+        translate: 7px -7px;
+        rotate: -8deg;
+    }
+}
+
 .levelTitle {
     pointer-events: none;
     cursor: auto;
@@ -88,13 +115,38 @@
         }
 
         .star {
+            transition: 1000ms;
+            animation-name: flyingStar;
+            animation-duration: 15s;
+            animation-fill-mode: both;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+
+            @for $i from 1 through 30 {
+                &:nth-child(#{$i}) {
+                    animation-delay: random() * 5 + s;
+                    animation-direction: if(random(2)==1, reverse, normal);
+                }
+            }
+
+
+
+            // Немного неудачны классы active означает видимость на карте, без него просто не будет звезды, disable означает можно ли поднимать эту звезду
+            &:not(.active) {
+                opacity: 0;
+            }
+
             &.active {
-                background-image: url('../assets/img/star.svg');
+                background: url('../assets/img/star.svg');
                 background-size: 100% 100%;
                 @include strongSvgLight($neutralColor);
             }
 
-            &.disable {}
+            &.disable {
+                opacity: 0.7;
+                scale: 0.7;
+                @include strongSvgLight($grayColor);
+            }
         }
     }
 }
@@ -313,6 +365,12 @@
     border-radius: 50%;
     width: $mdSize * 4;
     height: $mdSize * 4;
+
+    &.alive {}
+
+    &.dead {
+        opacity: 0.4;
+    }
 
     .target {
         position: absolute;

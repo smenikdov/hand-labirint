@@ -23,6 +23,10 @@ export default function Level() {
     // const [canAttack, setCanAttack] = useState(true);
 
     useEffect(() => {
+        if (!levelInfo.length) {
+            navigate('/');
+        }
+
         if (level.chat) {
             dispatch(addStack(level.chat));
         }
@@ -64,7 +68,8 @@ export default function Level() {
                                 <Cell
                                     key={`cell_${xIndex}`}
                                     cellSymbol={cell as CellSymbol}
-                                    state={levelInfo[xIndex][yIndex]}
+                                    state={levelInfo?.[xIndex]?.[yIndex]}
+                                    playerType={player.type}
                                 />)
                         }
                     </div>

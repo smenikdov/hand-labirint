@@ -22,7 +22,7 @@ levels.push(new Level({
         '################',
     ],
     title: 'Ну поехали!',
-    stopMode: true,
+    enemyMode: true,
     chat: [
         {
             text: 'Советую не спешить',
@@ -51,7 +51,7 @@ levels.push(new Level({
         '################',
     ],
     title: 'Ну поехали!',
-    stopMode: true,
+    enemyMode: true,
     chat: [],
 }));
 

@@ -85,9 +85,21 @@ const slice = createSlice({
             player.angle = angle;
             player.isFist = isFist;
         },
+
+        killEnemy(player, action: PayloadAction<number>) {
+            const enemyId = action.payload;
+            player.enemies = player.enemies.map(en =>
+                en.id === enemyId ? { ...en, status: 'dead' } : en
+            );
+        },
+
+        deleteEnemy(player, action: PayloadAction<number>) {
+            const enemyId = action.payload;
+            player.enemies = player.enemies.filter(en => en.id !== enemyId);
+        }
     }
 });
 
 export default slice.reducer;
-const { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, } = slice.actions;
-export { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, };
+const { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, killEnemy, deleteEnemy, } = slice.actions;
+export { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, killEnemy, deleteEnemy, };

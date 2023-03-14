@@ -1,7 +1,10 @@
 import React from 'react'
 
 type EnemyBotProps = {
-    targetNumber: 1 | 2 | 3 | 4 | 5,
+    data: {
+        targetNumber: 1 | 2 | 3 | 4 | 5,
+        status: 'alive' | 'dead',
+    },
     isTarget?: boolean,
     style: {
         [key: string]: string;
@@ -16,9 +19,11 @@ const getClass = {
 };
 
 
-export default function EnemyBot({ targetNumber, isTarget = false, style }: EnemyBotProps) {
+export default function EnemyBot({ data, isTarget = false, style }: EnemyBotProps) {
+    const { targetNumber, status } = data;
+
     return (
-        <div className="robot" style={style}>
+        <div className={`robot ${status}`} style={style}>
             {
                 isTarget &&
                 <div className="target">
