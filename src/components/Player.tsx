@@ -25,13 +25,16 @@ export default function Player() {
     return (
         <>
             <div
-                className={['player', player.type].join(' ')}
+                className={['player', player.type, `${player.weaponState}Weapon`].join(' ')}
                 style={getCoordinates(player)}
             >
-                <div
-                    className="triangle"
-                    style={triangleStyle}
-                />
+                {
+                    player.weaponState === 'prepare' &&
+                    <div
+                        className="triangle"
+                        style={triangleStyle}
+                    />
+                }
             </div>
 
             {

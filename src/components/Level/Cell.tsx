@@ -1,19 +1,17 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { CellSymbol, parseLab } from '../../scripts/types';
 
 interface CellProps {
     cellSymbol: CellSymbol,
-    state: {
-        status?: 'active' | 'disable',
-    },
+    status?: 'active' | 'disable',
     playerType: 'negative' | 'positive',
 };
 
-function Cell({ cellSymbol, state, playerType }: CellProps) {
+function Cell({ cellSymbol, status, playerType }: CellProps) {
     const generateClass = () => {
         const className = ['cell', parseLab[cellSymbol]];
-        if (state?.status) {
-            className.push(state?.status)
+        if (status) {
+            className.push(status)
         }
         if (playerType === 'positive' && cellSymbol === '★') {
             className.push('disable');

@@ -12,7 +12,7 @@ interface Player {
     enemies: Array<Enemy>,
     angle: number,
     isFist: boolean,
-    isReload: boolean,
+    weaponState: 'reloading' | 'ready' | 'prepare' | 'shoot',
 }
 
 const initialState: Player = {
@@ -21,12 +21,12 @@ const initialState: Player = {
     x: 50,
     y: 50,
     type: 'negative',
-    godMode: true,
+    godMode: false,
     bullets: [],
     enemies: [],
     angle: 0,
     isFist: false,
-    isReload: true,
+    weaponState: 'ready',
 };
 
 const slice = createSlice({
@@ -38,8 +38,8 @@ const slice = createSlice({
             player.bullets = action.payload;
         },
 
-        setReload(player, action: PayloadAction<boolean>) {
-            player.isReload = action.payload;
+        setWeaponState(player, action: PayloadAction<'reloading' | 'ready' | 'prepare' | 'shoot'>) {
+            player.weaponState = action.payload;
         },
 
         setType(player, action: PayloadAction<'positive' | 'negative'>) {
@@ -101,5 +101,5 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-const { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, killEnemy, deleteEnemy, } = slice.actions;
-export { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setReload, killEnemy, deleteEnemy, };
+const { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setWeaponState, killEnemy, deleteEnemy, } = slice.actions;
+export { setStars, setCoins, goTo, setType, addStar, addCoin, updateBullets, playerUpdate, setWeaponState, killEnemy, deleteEnemy, };

@@ -68,7 +68,7 @@ export default function Level() {
                                 <Cell
                                     key={`cell_${xIndex}`}
                                     cellSymbol={cell as CellSymbol}
-                                    state={levelInfo?.[xIndex]?.[yIndex]}
+                                    status={levelInfo?.[xIndex]?.[yIndex]?.status}
                                     playerType={player.type}
                                 />)
                         }

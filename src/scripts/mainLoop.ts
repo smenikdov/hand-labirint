@@ -5,15 +5,16 @@ import { addStar, deleteEnemy } from '../store/player';
 import { changeCellInfo, endLevel } from '../store/game';
 import { selectLevel } from '../store';
 import { Point, FingersData, NewPlayerData, Block, CellSymbol } from '../scripts/types';
-import { playerUpdate, setReload, setType } from '../store/player';
+import { playerUpdate, setWeaponState, setType } from '../store/player';
 import * as hp from '../scripts/helpers';
 
-let FPS = 50;
+let FPS = 30;
 let resultsCount = 0;
 
 setInterval(() => {
     FPS = resultsCount;
     resultsCount = 0;
+    console.log(FPS)
 }, 1000);
 
 interface Results {
@@ -47,13 +48,14 @@ export default function startWatch() {
     const canvasCtx = canvasElement.getContext('2d')!;
 
     function onResults(results: Results) {
+        mainLoop();
         const landmarks = results.multiHandLandmarks[0];
         canvasElement.style.height = canvasElement.width * videoElement.videoHeight / videoElement.videoWidth + 'px';
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-        if (store.getState().player.godMode || landmarks || !hp.isAllLandmarks(landmarks)) {
+        if (store.getState().player.godMode || !landmarks || !hp.isAllLandmarks(landmarks)) {
             return;
         }
 
@@ -65,7 +67,7 @@ export default function startWatch() {
         if (fingersData.lastFingersCounts.length > 10) {
             fingersData.lastFingersCounts.shift();
         }
-        const angle = hp.calcAngle(landmarks[5], landmarks[8]);
+        const angle = -hp.calcAngle(landmarks[5], landmarks[8]);
         fingersData.lastAngles.push(angle);
         if (fingersData.lastAngles.length > 10) {
             fingersData.lastAngles.shift();
@@ -90,9 +92,7 @@ export default function startWatch() {
 
     const camera = new Camera(videoElement, {
         onFrame: async () => {
-            maonLoop();
             await hands.send({ image: videoElement });
-            maonLoop();
         },
     });
     camera.start();
@@ -129,7 +129,7 @@ export default function startWatch() {
         });
     }
 
-    function maonLoop() {
+    function mainLoop() {
         resultsCount++;
         const state = store.getState();
         const player = state.player;
@@ -138,7 +138,7 @@ export default function startWatch() {
         const level = selectLevel(state);
         const angle = hp.calcAverageAngle(fingersData.lastAngles);
         const isFist = Math.round(hp.calcAverage(fingersData.lastFingersCounts)) === 4;
-        const souldGenerateEnemyBot = level.enemyMode && newPlayerData.enemies.length < 15 && Math.random() < 1 / 10 / FPS;
+        const souldGenerateEnemyBot = level.enemyMode && newPlayerData.enemies.length < 15 && Math.random() < 1 / 20 / FPS;
 
         newPlayerData.x = player.x + (fingersData.x - player.x) / 10;
         newPlayerData.y = player.y + (fingersData.y - player.y) / 10;
@@ -195,15 +195,27 @@ export default function startWatch() {
 
         if (isLevelActive && souldGenerateEnemyBot && player.type === 'negative') {
             newPlayerData.enemies.push({
-                x: -100,
-                y: -100,
+                x: Math.random() < 0.5 ? -100 : window.innerWidth + 100,
+                y: Math.random() < 0.5 ? -100 : window.innerHeight + 100,
                 id: enemyId++,
                 targetNumber: Math.floor(hp.rand(1, 5)) as 1 | 2 | 3 | 4 | 5,
                 status: 'alive',
             });
         }
 
-        if (isLevelActive && isFist && player.isReload) {
+        if (isLevelActive && isFist && player.weaponState === 'ready') {
+            store.dispatch(setWeaponState('prepare'));
+
+            setTimeout(() => {
+                store.dispatch(setWeaponState('shoot'));
+            }, 5000);
+
+            setTimeout(() => {
+                store.dispatch(setWeaponState('ready'));
+            }, 10000);
+        }
+
+        if (player.weaponState === 'shoot') {
             newPlayerData.bullets.push({
                 x: newPlayerData.x,
                 y: newPlayerData.y,
@@ -211,10 +223,7 @@ export default function startWatch() {
                 type: player.type,
                 id: bulletId++,
             });
-            store.dispatch(setReload(false));
-            setTimeout(() => {
-                store.dispatch(setReload(true));
-            }, 3000);
+            store.dispatch(setWeaponState('reloading'));
         }
 
         store.dispatch(playerUpdate(newPlayerData));
@@ -294,4 +303,6 @@ export default function startWatch() {
             }
         });
     };
+
+    // setInterval(mainLoop, 1000 / 30);
 }

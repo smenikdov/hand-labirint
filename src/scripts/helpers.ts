@@ -75,7 +75,7 @@ export const calcAverageAngle = (angles: Array<number>): number => {
 };
 
 export const shiftBullets = (bullets: Array<Bullet>): Array<Bullet> => {
-    const BULLET_SPEED = 20;
+    const BULLET_SPEED = 40;
     const newBullets = bullets.map(({ x, y, angle, type, id }) => {
         return {
             x: x + BULLET_SPEED * Math.cos(angle),
@@ -92,7 +92,7 @@ export const shiftBullets = (bullets: Array<Bullet>): Array<Bullet> => {
 };
 
 export const shiftEnemies = (enemies: Array<Enemy>, player: PointWithType): Array<Enemy> => {
-    const ENEMY_SPEED = 1;
+    const ENEMY_SPEED = 2;
     const newEnemies = enemies.map((enemy) => {
         const newEnemy = deepCopy(enemy);
         if (newEnemy.status === 'alive') {

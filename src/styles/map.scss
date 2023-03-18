@@ -14,6 +14,20 @@
     }
 }
 
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes flyingStar {
     0% {
         translate: 7px -7px;
@@ -183,11 +197,34 @@
 
 .player {
     position: absolute;
+    transition: box-shadow 300ms;
     border-radius: 50%;
     width: $lgSize;
     height: $lgSize;
     will-change: transform;
     z-index: 999;
+
+    &.readyWeapon {}
+
+    &.prepareWeapon {
+        &.negative {
+            box-shadow: 0 0 35px $negativeColor
+        }
+
+        &.positive {
+            box-shadow: 0 0 35px $positiveColor
+        }
+    }
+
+    &.reloadingWeapon {
+        animation: blink 1s infinite;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 65% 65%;
+        background-image: url(../assets/img/bullet.svg);
+    }
+
+    &.shootWeapon {}
 
     &.negative {
         @include strongLight($negativeColor);
