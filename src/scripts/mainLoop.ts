@@ -147,10 +147,25 @@ export default function startWatch() {
         newPlayerData.bullets = hp.shiftBullets(player.bullets);
         newPlayerData.enemies = hp.shiftEnemies(player.enemies, player);
 
+        if (newPlayerData.isFist && !player.isFist) {
+            const element = document.elementFromPoint(newPlayerData.x, newPlayerData.y);
+
+            if (element) {
+                const clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: newPlayerData.x + 10,
+                    clientY: newPlayerData.y + 10,
+                });
+                element.dispatchEvent(clickEvent);
+            }
+        }
+
         if (newPlayerData.enemies.length) {
             const enemyDiv = document.querySelector('.robot') as HTMLDivElement;
             const enemySize = enemyDiv.offsetWidth;
-            newPlayerData.enemies.forEach(enemy => {
+            newPlayerData.enemies.filter(enemy => enemy.status === 'alive').forEach(enemy => {
                 const enemyBlock: Block = {
                     x: enemy.x,
                     y: enemy.y,
@@ -203,7 +218,7 @@ export default function startWatch() {
             });
         }
 
-        if (isLevelActive && isFist && player.weaponState === 'ready') {
+        if (isLevelActive && isFist && player.weaponState === 'ready' && level.enemyMode) {
             store.dispatch(setWeaponState('prepare'));
 
             setTimeout(() => {
@@ -215,7 +230,7 @@ export default function startWatch() {
             }, 10000);
         }
 
-        if (player.weaponState === 'shoot') {
+        if (player.weaponState === 'shoot' && level.enemyMode) {
             newPlayerData.bullets.push({
                 x: newPlayerData.x,
                 y: newPlayerData.y,
@@ -234,7 +249,10 @@ export default function startWatch() {
 
         const playerDiv = document.querySelector('.player') as HTMLDivElement;
         const cellDiv = document.querySelector('.cell') as HTMLDivElement;
-        const map = document.querySelector('#map') as HTMLDivElement;
+        const map = document.querySelector('#map') as HTMLDivElement
+        if (!cellDiv || !playerDiv || !map) {
+            return;
+        }
         const cellSize = cellDiv.offsetWidth;
         const playerSize = playerDiv.offsetWidth;
         const { top: topMargin, left: leftMargin } = map.getBoundingClientRect();

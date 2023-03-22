@@ -38,10 +38,10 @@ export const calcResultPoint = (landmarks: Landmarks): Point => {
     }
     x /= 16;
     y /= 16;
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    x = width - x * width;
-    y = y * height;
+    let width = window.innerWidth * 1.2;
+    let height = window.innerHeight * 1.2;
+    x = width - x * width - width * 0.1;
+    y = y * height - height * 0.1;
     return {
         x,
         y,
@@ -75,7 +75,7 @@ export const calcAverageAngle = (angles: Array<number>): number => {
 };
 
 export const shiftBullets = (bullets: Array<Bullet>): Array<Bullet> => {
-    const BULLET_SPEED = 40;
+    const BULLET_SPEED = 55;
     const newBullets = bullets.map(({ x, y, angle, type, id }) => {
         return {
             x: x + BULLET_SPEED * Math.cos(angle),
@@ -92,7 +92,9 @@ export const shiftBullets = (bullets: Array<Bullet>): Array<Bullet> => {
 };
 
 export const shiftEnemies = (enemies: Array<Enemy>, player: PointWithType): Array<Enemy> => {
-    const ENEMY_SPEED = 2;
+    const ENEMY_SPEED = player.type === 'negative' ? 3 : 15;
+
+
     const newEnemies = enemies.map((enemy) => {
         const newEnemy = deepCopy(enemy);
         if (newEnemy.status === 'alive') {

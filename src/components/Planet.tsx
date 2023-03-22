@@ -25,6 +25,7 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     const rotationRadius = activePlanet === id ? 200 : 40;
     const starsCount = useSelector((state: RootState) => state.player.stars);
     const [isVisibleBuyModal, setVisibilityBuyModal] = useState(false);
+    const [isOpenedNow, setIsOpenedNow] = useState(!!localStorage.getItem(className));
 
     useEffect(() => {
         const newTransformStyles = [];
@@ -44,7 +45,7 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
         event.preventDefault();
         event.stopPropagation();
-        if (isOpen) {
+        if (isOpen || isOpenedNow) {
             setActivePlanet(id);
             return;
         }
@@ -61,6 +62,9 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
     const handleUnlockPlanet = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         event.stopPropagation();
+        dispatch(setStars(starsCount - cost));
+        localStorage.setItem(className, 'open');
+        setIsOpenedNow(true);
         setVisibilityBuyModal(false);
     };
 
@@ -82,14 +86,14 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
 
     return (
         <div
-            className={`neonPlanet ${className} ${isOpen ? 'isOpen' : 'blocked'}`}
+            className={`neonPlanet ${className} ${isOpen || isOpenedNow ? 'isOpen' : 'blocked'}`}
             style={planetStyle}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
             onClick={handleClick}
         >
             {
-                !isOpen &&
+                !isOpen && !isOpenedNow &&
                 <div className="cost">
                     <div>{cost}</div>
                     <div className="icon mlSm" />
@@ -118,11 +122,8 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
                 showTooltip && activePlanet === null &&
                 <div className="tooltip">
                     {
-                        !isOpen
-                            ?
-                            <BiLockAlt className="mrSm" />
-                            :
-                            null
+                        !isOpen && !isOpenedNow &&
+                        <BiLockAlt className="mrSm" />
                     }
                     <div>
                         {name}
@@ -132,10 +133,15 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
 
             <ModalDialog
                 isVisible={isVisibleBuyModal}
-                title="Разблокировать уровень"
+                title="Разблокировать планету"
                 onClose={handleClose}
             >
-                <p>Вы действительно хотите разблокировать этот уровень?</p>
+                {
+                    starsCount >= cost ?
+                        <p>Вы уверены, что хотите разблокировать эту планету за {cost}★ ?</p>
+                        :
+                        <p>У вас не достаточно звезд для разблокировки этой планеты</p>
+                }
                 <div className="modalButtons mtMd">
                     <Button
                         text="Отмена"
@@ -144,10 +150,13 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
                         className="mrMd"
                         onClick={handleClose}
                     />
-                    <Button
-                        text="Разблокировать"
-                        onClick={handleUnlockPlanet}
-                    />
+                    {
+                        starsCount >= cost &&
+                        <Button
+                            text="Разблокировать"
+                            onClick={handleUnlockPlanet}
+                        />
+                    }
                 </div>
             </ModalDialog>
         </div>

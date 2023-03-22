@@ -12,6 +12,7 @@ interface Player {
     enemies: Array<Enemy>,
     angle: number,
     isFist: boolean,
+    energy: number,
     weaponState: 'reloading' | 'ready' | 'prepare' | 'shoot',
 }
 
@@ -26,6 +27,7 @@ const initialState: Player = {
     enemies: [],
     angle: 0,
     isFist: false,
+    energy: 0,
     weaponState: 'ready',
 };
 
@@ -84,6 +86,12 @@ const slice = createSlice({
             player.enemies = enemies;
             player.angle = angle;
             player.isFist = isFist;
+            if (isFist && player.energy < 100) {
+                player.energy++;
+            }
+            if (!isFist && player.energy > 0) {
+                player.energy--;
+            }
         },
 
         killEnemy(player, action: PayloadAction<number>) {

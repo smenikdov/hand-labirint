@@ -44,6 +44,7 @@ export default function Level() {
         <>
             <DarkMode
                 isActive={!!level.darkMode}
+                energy={player.energy}
                 x={player.x}
                 y={player.y}
             />

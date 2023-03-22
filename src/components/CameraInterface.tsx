@@ -103,14 +103,14 @@ export default function LevelMenu() {
                     className="hideCameraButton"
                     style={{
                         rotate: isVisibleCamera ? '180deg' : '0deg',
-                        right: isVisibleCamera ? '-42px' : 'calc(100% - 42px)',
+                        right: isVisibleCamera ? '-43px' : 'calc(100% - 43px)',
                     }}
                     onClick={() => setVisibilityCamera(!isVisibleCamera)}
                 >
                     <CameraArrow />
                 </div>
                 <div className="hideCameraText">
-                    Камера все еще ведет съемку
+                    Камера все еще работает
                 </div>
                 <div className="flex own mtSm mlLg">
                     <div className="flex coinsCount">
