@@ -129,19 +129,19 @@
         }
 
         .star {
-            transition: 1000ms;
-            animation-name: flyingStar;
-            animation-duration: 15s;
-            animation-fill-mode: both;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite;
-
-            @for $i from 1 through 30 {
-                &:nth-child(#{$i}) {
-                    animation-delay: random() * 5 + s;
-                    animation-direction: if(random(2)==1, reverse, normal);
-                }
-            }
+            //transition: 1000ms;
+            //animation-name: flyingStar;
+            //animation-duration: 15s;
+            //animation-fill-mode: both;
+            //animation-timing-function: ease-in-out;
+            //animation-iteration-count: infinite;
+            //
+            //@for $i from 1 through 30 {
+            //    &:nth-child(#{$i}) {
+            //        animation-delay: random() * 5 + s;
+            //        animation-direction: if(random(2)==1, reverse, normal);
+            //    }
+            //}
 
 
 
@@ -198,11 +198,10 @@
 
 .player {
     position: absolute;
-    transition: box-shadow 300ms;
     border-radius: 50%;
     width: $lgSize;
     height: $lgSize;
-    will-change: transform;
+    will-change: transform, box-shadow;
     z-index: 999;
 
     &.readyWeapon {}
@@ -218,7 +217,7 @@
     }
 
     &.reloadingWeapon {
-        animation: blink 1s infinite;
+        // animation: blink 1s infinite;
         background-position: center;
         background-repeat: no-repeat;
         background-size: 65% 65%;

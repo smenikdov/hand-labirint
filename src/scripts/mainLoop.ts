@@ -48,6 +48,7 @@ export default function startWatch() {
     const canvasCtx = canvasElement.getContext('2d')!;
 
     function onResults(results: Results) {
+        resultsCount++;
         mainLoop();
         const landmarks = results.multiHandLandmarks[0];
         canvasElement.style.height = canvasElement.width * videoElement.videoHeight / videoElement.videoWidth + 'px';
@@ -130,7 +131,6 @@ export default function startWatch() {
     }
 
     function mainLoop() {
-        resultsCount++;
         const state = store.getState();
         const player = state.player;
         const game = state.game;
@@ -140,8 +140,10 @@ export default function startWatch() {
         const isFist = Math.round(hp.calcAverage(fingersData.lastFingersCounts)) === 4;
         const souldGenerateEnemyBot = level.enemyMode && newPlayerData.enemies.length < 15 && Math.random() < 1 / 20 / FPS;
 
-        newPlayerData.x = player.x + (fingersData.x - player.x) / 10;
-        newPlayerData.y = player.y + (fingersData.y - player.y) / 10;
+        const xChange = (fingersData.x - player.x) / 10;
+        const yChange = (fingersData.y - player.y) / 10;
+        newPlayerData.x = player.x + xChange;
+        newPlayerData.y = player.y + yChange;
         newPlayerData.isFist = isFist;
         newPlayerData.angle = angle;
         newPlayerData.bullets = hp.shiftBullets(player.bullets);
