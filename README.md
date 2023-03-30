@@ -3,6 +3,7 @@
 In the project directory, you can run:
 
 ### `npm run dev`
+### `or`
 ### `npm run serve`
 
 Runs the app in the development mode.\
