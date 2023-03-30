@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  front:
+    container_name: front
+    image: front
+    environment:
+      - WATCHPACK_POLLING=true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 3000:3000

@@ -35,7 +35,9 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "dev": "docker-compose -f docker-compose.dev.yml up",
+        "serve": "docker-compose -f docker-compose.prod.yml up",
+        "start": "react-scripts start --watch",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
@@ -59,6 +61,6 @@
         ]
     },
     "devDependencies": {
-        "dotenv": "^16.0.0"
+        "dotenv": "^16.0.3"
     }
 }

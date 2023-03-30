@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  front:
+    container_name: front-prod
+    image: front-prod
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      target: production
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 80:80
