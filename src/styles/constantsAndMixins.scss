@@ -87,6 +87,10 @@ $horizontalMargin: calc(((#{100vw} - #{$mapSize}) / 2 - #{$elemntWidth}) / 2);
     justify-content: space-between;
 }
 
+.nowrap {
+    flex-wrap: nowrap;
+}
+
 .column {
     flex-direction: column;
     justify-content: center;

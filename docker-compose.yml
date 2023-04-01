@@ -6,7 +6,7 @@ services:
     image: front-prod
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
       target: production
     volumes:
       - ./src:/app/src

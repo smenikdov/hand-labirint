@@ -47,10 +47,9 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
         event.stopPropagation();
         if (isOpen || isOpenedNow) {
             setActivePlanet(id);
-            return;
+        } else {
+            setVisibilityBuyModal(true);
         }
-
-        setVisibilityBuyModal(true);
     };
 
     const handleClose = (event: React.MouseEvent<HTMLElement>) => {

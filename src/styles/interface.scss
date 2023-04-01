@@ -102,3 +102,16 @@
     background: radial-gradient(circle, rgba(#fff, 0.07), rgba(#000, 0.9) 75vh);
     opacity: 0.9;
 }
+
+.copyInputContainer {
+    border: 2px solid #808080;
+
+    .copyInput {
+        font-size: $lgSize;
+        background: #e4e4e4;
+        padding: 5px;
+        width: 100%;
+        border: none;
+        height: 40px;
+    }
+}

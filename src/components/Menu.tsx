@@ -4,7 +4,7 @@ import planets from '../levels/planets';
 import { useDispatch } from 'react-redux';
 import { resetChat } from '../store/chat';
 
-const ROTATION_RADIUS = 200;
+const ROTATION_RADIUS = 240;
 
 export default function Menu() {
     const dispatch = useDispatch();

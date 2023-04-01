@@ -5,7 +5,7 @@ $planetColors: (
     "darkPlanet": ("color1": #090231, "color2": #471616, "color3": #000),
     "doublePlanet": ("color1": $negativeColor, "color2": $positiveColor, "color3": $neutralColor),
     "startPlanet": ("color1": #18d638, "color2": #09ceff, "color3": #ffffff),
-    "stopPlanet": ("color1": #ff2600, "color2": #d1a103, "color3": hsl(51, 88%, 73%)),
+    "enemyPlanet": ("color1": #ff2600, "color2": #d1a103, "color3": hsl(51, 88%, 73%)),
 );
 
 #menu {
@@ -23,31 +23,31 @@ $planetColor in $planetColors {
     $color2: map.get($planetColor, "color2");
     $color3: map.get($planetColor, "color3");
 
-    @keyframes #{$planetName}Animation {
-        from {
-            box-shadow:
-                inset 0 0 50px $color3,
-                inset 20px 0 80px $color1,
-                inset -20px 0 80px $color2,
-                inset 20px 0 300px $color1,
-                inset -20px 0 300px $color2,
-                0 0 50px $color3,
-                -10px 0 80px $color1,
-                10px 0 80px $color2;
-        }
+    // @keyframes #{$planetName}Animation {
+    //     from {
+    //         box-shadow:
+    //             inset 0 0 50px $color3,
+    //             inset 20px 0 80px $color1,
+    //             inset -20px 0 80px $color2,
+    //             inset 20px 0 300px $color1,
+    //             inset -20px 0 300px $color2,
+    //             0 0 50px $color3,
+    //             -10px 0 80px $color1,
+    //             10px 0 80px $color2;
+    //     }
 
-        to {
-            box-shadow:
-                inset 0 0 50px $color3,
-                inset 15px 0 65px $color2,
-                inset -15px 0 65px $color1,
-                inset 20px 0 300px $color2,
-                inset -20px 0 300px $color1,
-                0 0 20px $color3,
-                -10px 0 15px $color2,
-                10px 0 15px $color1;
-        }
-    }
+    //     to {
+    //         box-shadow:
+    //             inset 0 0 50px $color3,
+    //             inset 15px 0 65px $color2,
+    //             inset -15px 0 65px $color1,
+    //             inset 20px 0 300px $color2,
+    //             inset -20px 0 300px $color1,
+    //             0 0 20px $color3,
+    //             -10px 0 15px $color2,
+    //             10px 0 15px $color1;
+    //     }
+    // }
 
     .#{$planetName} {
         box-shadow:
@@ -59,8 +59,8 @@ $planetColor in $planetColors {
             0 0 50px $color3,
             -10px 0 80px $color1,
             10px 0 80px $color2;
-        animation: #{$planetName}Animation 5s infinite alternate linear;
-        animation-delay: random()*3+s;
+        // animation: #{$planetName}Animation 5s infinite alternate linear;
+        // animation-delay: random()*3+s;
     }
 }
 

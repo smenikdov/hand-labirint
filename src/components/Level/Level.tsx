@@ -42,20 +42,26 @@ export default function Level() {
 
     return (
         <>
-            <DarkMode
-                isActive={!!level.darkMode}
-                energy={player.energy}
-                x={player.x}
-                y={player.y}
-            />
-            {/* <StopMode
-                isActive={!!level.stopMode}
-                x={player.x}
-                y={player.y}
-                isStartSpaceshipAttack={isStartSpaceshipAttack}
-                setIsStartSpaceshipAttack={setIsStartSpaceshipAttack}
-                setCanAttack={setCanAttack}
-            /> */}
+            {
+                level.darkMode &&
+                <DarkMode
+                    isActive={!!level.darkMode}
+                    energy={player.energy}
+                    x={player.x}
+                    y={player.y}
+                />
+            }
+            {
+                // level.stopMode &&
+                // <StopMode
+                //     isActive={!!level.stopMode}
+                //     x={player.x}
+                //     y={player.y}
+                //     isStartSpaceshipAttack={isStartSpaceshipAttack}
+                //     setIsStartSpaceshipAttack={setIsStartSpaceshipAttack}
+                //     setCanAttack={setCanAttack}
+                // />
+            }
 
             <h1 className="levelTitle">
                 {level.title}

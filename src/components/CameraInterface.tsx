@@ -8,10 +8,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ModalDialog from './ModalDialog';
 import Button from './Button';
 import { ReactComponent as CameraArrow } from '../assets/img/cameraArrow.svg';
+import { v4 as uuidv4 } from 'uuid';
+import { BiCheck, BiLinkAlt } from 'react-icons/bi';
 
 export default function LevelMenu() {
+    const [uuid, setUuid] = useState('');
     const [isVisibleMenu, setVisibilityMenu] = useState(false);
+    const [isLinkCopied, setLinkCopied] = useState(false);
     const [isVisibleCamera, setVisibilityCamera] = useState(true);
+    const [isVisibleAddFriendModal, setVisibilityAddFriendModal] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const coinsCount = useSelector((state: RootState) => state.player.coins);
@@ -22,9 +27,30 @@ export default function LevelMenu() {
         navigate('/');
     };
 
-    const handleKeyPressed = (event: KeyboardEvent) => {
+    const handleKeyPressed = (event: KeyboardEvent): void => {
         if (event.key === 'Escape' && !event.repeat && location.pathname === '/game') {
             setVisibilityMenu(!isVisibleMenu);
+        }
+    };
+
+    const handleAddFriend = (): void => {
+        setUuid(uuidv4());
+        setVisibilityMenu(false);
+        setVisibilityAddFriendModal(true);
+    };
+
+    const copyLink = (): void => {
+        try {
+            const el = document.createElement('textarea');
+            el.value = `https://hand-labirint.ru/game?uuid=${uuid}`;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            setLinkCopied(true);
+        } catch (error) {
+            console.error('ERROR COPY LINK');
+            console.error(error);
         }
     };
 
@@ -142,6 +168,13 @@ export default function LevelMenu() {
                         onClick={() => setVisibilityMenu(false)}
                     />
                     <Button
+                        text="Пригласить друга"
+                        dense
+                        color="gray"
+                        className="mtMd"
+                        onClick={handleAddFriend}
+                    />
+                    <Button
                         text="Настройки"
                         dense
                         color="gray"
@@ -156,6 +189,43 @@ export default function LevelMenu() {
                         onClick={handleMenuGoOut}
                     />
                 </div>
+            </ModalDialog>
+
+            <ModalDialog
+                isVisible={isVisibleAddFriendModal}
+                title="Пригласить в игру"
+                onClose={() => setVisibilityAddFriendModal(false)}
+                width={600}
+            >
+                <div className="flex column">
+                    <div>
+                        Для того чтобы пригласить друга, отправьте ему эту ссылку:
+                    </div>
+
+                    <div className="mtMd flex nowrap fullWidth copyInputContainer">
+                        <input
+                            value={`https://hand-labirint.ru/game?uuid=${uuid}`}
+                            type="text"
+                            readOnly
+                            className="copyInput"
+                        />
+                        <Button
+                            Icon={isLinkCopied ? BiCheck : BiLinkAlt}
+                            onClick={copyLink}
+                            style={{ height: '40px' }}
+                            squre
+                        />
+                    </div>
+
+                    <Button
+                        text="Отменить"
+                        dense
+                        color="negative"
+                        className="mtMd"
+                        onClick={() => setVisibilityAddFriendModal(false)}
+                    />
+                </div>
+
             </ModalDialog>
         </>
     )

@@ -2,7 +2,7 @@ import { Planet } from '../scripts/types';
 import startPlanetLevels from './startPlanetLevels';
 import doublePlanetLevels from './doublePlanetLevels';
 import darkPlanetLevels from './darkPlanetLevels';
-import stopPlanetLevels from './stopPlanetLevels';
+import enemyPlanetLevels from './enemyPlanetLevels';
 
 let planetId: number = 0;
 const planets: Planet[] = [
@@ -18,22 +18,23 @@ const planets: Planet[] = [
 	},
 	// {
 	// 	id: planetId++,
-	// 	name: 'Планета двойников',
+	// 	name: 'Планета друзей',
 	// 	levels: doublePlanetLevels,
 	// 	isOpen: true,
+	// 	cost: 5,
 	// 	description: 'Хорошая планета для начала',
-	// 	size: '120px',
+	// 	size: '190px',
 	// 	className: 'doublePlanet',
 	// },
 	{
 		id: planetId++,
 		name: 'Планета остановок',
-		levels: stopPlanetLevels,
-		isOpen: !!localStorage.getItem('stopPlanet'),
+		levels: enemyPlanetLevels,
+		isOpen: !!localStorage.getItem('enemyPlanet'),
 		cost: 3,
 		description: 'Хорошая планета для начала',
 		size: '120px',
-		className: 'stopPlanet',
+		className: 'enemyPlanet',
 	},
 	{
 		id: planetId++,
@@ -42,7 +43,7 @@ const planets: Planet[] = [
 		isOpen: true,
 		cost: 0,
 		description: 'Хорошая планета для начала',
-		size: '320px',
+		size: '280px',
 		className: 'startPlanet',
 	},
 ];
