@@ -19,6 +19,7 @@ export default function Level() {
     const { levelInfo, isLevelComplete } = useSelector((state: RootState) => state.game);
     const level = useSelector(selectLevel);
     const player = useSelector((state: RootState) => state.player);
+    const chatStack = useSelector((state: RootState) => state.chat.stack);
     // const [isStartSpaceshipAttack, setIsStartSpaceshipAttack] = useState(false);
     // const [canAttack, setCanAttack] = useState(true);
 
@@ -39,6 +40,10 @@ export default function Level() {
     const goToNextLevel = () => {
         dispatch(setLevel(level.id + 1));
     };
+
+    if (chatStack.length > 0) {
+        return null;
+    }
 
     return (
         <>

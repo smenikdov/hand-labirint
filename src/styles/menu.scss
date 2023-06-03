@@ -136,3 +136,16 @@ $planetColor in $planetColors {
     display: flex;
     align-items: center;
 }
+
+
+.helloMenu {
+    @include absoluteToCenter();
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &__button {
+        text-transform: uppercase;
+        font-weight: 800 !important;
+        font-size: 40px !important;
+    }
+}

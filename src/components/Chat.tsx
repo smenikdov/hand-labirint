@@ -4,6 +4,12 @@ import { ReactComponent as EnterArrowIcon } from '../assets/img/enterArrow.svg';
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeMessage } from '../store/chat';
+import robotTickSound from '../assets/mp3/robot-tick-sound.mp3';
+
+
+const robotAudio = new Audio(robotTickSound);
+robotAudio.loop = true;
+robotAudio.volume = 0.6;
 
 export default function Chat() {
     const chat = useSelector((state: RootState) => state.chat);
@@ -45,6 +51,9 @@ export default function Chat() {
     }, [lastMessage]);
 
     const stopPrinting = () => {
+        console.log(123456)
+        robotAudio.pause();
+
         setActive(false);
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -53,6 +62,8 @@ export default function Chat() {
     };
 
     const startPrinting = () => {
+        console.log(3333)
+        robotAudio.play();
         setActive(true);
         let i = 0;
         setDisplayText('');

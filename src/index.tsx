@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Level from './components/Level/Level';
 import CameraInterface from './components/CameraInterface';
@@ -18,12 +18,10 @@ import {
     Route,
 } from 'react-router-dom';
 
-
 function App() {
     useEffect(() => {
         startMainLoop();
     }, []);
-
 
 
     return (

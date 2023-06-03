@@ -6,6 +6,10 @@ import { changeCellInfo, endLevel } from '../store/game';
 import { selectLevel } from '../store';
 import { Point, FingersData, NewPlayerData, Block, CellSymbol } from '../scripts/types';
 import { playerUpdate, setWeaponState, setType } from '../store/player';
+import starSound from '../assets/mp3/star.mp3';
+import winSound from '../assets/mp3/win.mp3';
+import gameOver from '../assets/mp3/game-over.mp3';
+import gameStart from '../assets/mp3/game-start.mp3';
 import * as hp from '../scripts/helpers';
 
 let FPS = 30;
@@ -75,27 +79,27 @@ export default function startWatch() {
         }
     }
 
-    const hands = new Hands({
-        locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-        }
-    });
+    // const hands = new Hands({
+    //     locateFile: (file) => {
+    //         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    //     }
+    // });
 
-    hands.setOptions({
-        maxNumHands: 1,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-    });
+    // hands.setOptions({
+    //     maxNumHands: 1,
+    //     modelComplexity: 1,
+    //     minDetectionConfidence: 0.5,
+    //     minTrackingConfidence: 0.5,
+    // });
 
-    hands.onResults(onResults);
+    // hands.onResults(onResults);
 
-    const camera = new Camera(videoElement, {
-        onFrame: async () => {
-            await hands.send({ image: videoElement });
-        },
-    });
-    camera.start();
+    // const camera = new Camera(videoElement, {
+    //     onFrame: async () => {
+    //         await hands.send({ image: videoElement });
+    //     },
+    // });
+    // camera.start();
 
     if (store.getState().player.godMode) {
         let isMouseDown = false;
@@ -281,7 +285,10 @@ export default function startWatch() {
 
             if (isCrossing) {
                 const cellState = game.levelInfo[xIndex][yIndex];
-                if (hp.isWall(cell as CellSymbol)) {
+                if (hp.isWall(cell as CellSymbol) && player.type === 'negative') {
+                    const audio = new Audio(gameOver);
+                    audio.volume = 0.6;
+                    audio.play();
                     // setCanAttack(true);
                     // setIsStartSpaceshipAttack(false);
                     store.dispatch(setType('positive'));
@@ -289,6 +296,8 @@ export default function startWatch() {
 
                 if (cell === '★') {
                     if (cellState.status === 'active' && player.type === 'negative') {
+                        const audio = new Audio(starSound);
+                        audio.play();
                         store.dispatch(addStar());
                         store.dispatch(changeCellInfo({ xIndex, yIndex, status: 'disable' }));
                     }
@@ -307,11 +316,17 @@ export default function startWatch() {
                     // }
                 }
 
-                if (cell === '0') {
+                if (cell === '0' && player.type === 'positive') {
+                    const audio = new Audio(gameStart);
+                    audio.volume = 0.6;
+                    audio.play();
                     store.dispatch(setType('negative'));
                 }
 
                 if (cell === '1' && player.type === 'negative') {
+                    const audio = new Audio(winSound);
+                    audio.play();
+
                     store.dispatch(setType('positive'));
                     store.dispatch(endLevel());
                     // setCanAttack(true);
@@ -323,5 +338,5 @@ export default function startWatch() {
         });
     };
 
-    // setInterval(mainLoop, 1000 / 30);
+    setInterval(mainLoop, 1000 / 30);
 }

@@ -19,6 +19,7 @@ interface Game {
     levelInfo: Array<Array<CellInfo>>,
     levelId: number,
     isLevelComplete: boolean,
+    isVisibleHelloMenu: boolean,
 };
 
 interface PayloadChangeCellState {
@@ -32,6 +33,7 @@ const initialState: Game = {
     levelId: 4,
     levelInfo: [],
     isLevelComplete: false,
+    isVisibleHelloMenu: true,
 };
 
 const slice = createSlice({
@@ -75,6 +77,10 @@ const slice = createSlice({
             game.levelInfo[xIndex][yIndex].status = status;
         },
 
+        setVisibilityHelloMenu(game, action: PayloadAction<boolean>) {
+            game.isVisibleHelloMenu = action.payload;
+        },
+
         // resetMapInfo(game) {
         //     game.levelInfo.forEach(cellInfo => cellInfo.status ? cellInfo.status = 'active' : 0);
         // },
@@ -82,5 +88,5 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-const { setLevel, setPlanet, changeCellInfo, endLevel, } = slice.actions;
-export { setLevel, setPlanet, changeCellInfo, endLevel, };
+const { setLevel, setPlanet, changeCellInfo, endLevel, setVisibilityHelloMenu } = slice.actions;
+export { setLevel, setPlanet, changeCellInfo, endLevel, setVisibilityHelloMenu };

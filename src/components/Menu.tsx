@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { RootState } from '../store';
 import Planet from './Planet';
 import planets from '../levels/planets';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { resetChat } from '../store/chat';
+import { setVisibilityHelloMenu } from '../store/game';
+import mainBg from '../assets/mp3/main-bg.mp3';
+import Button from './Button';
+import whooshSound from '../assets/mp3/whoosh.mp3';
 
 const ROTATION_RADIUS = 240;
 
@@ -10,6 +15,7 @@ export default function Menu() {
     const dispatch = useDispatch();
     const [transformStyles, setTransformStyles] = useState<string[]>([]);
     const [activePlanet, setActivePlanet] = useState<number | null>(null);
+    const isVisibleHelloMenu = useSelector((state: RootState) => state.game.isVisibleHelloMenu);
 
     useEffect(() => {
         dispatch(resetChat());
@@ -24,14 +30,46 @@ export default function Menu() {
         setTransformStyles(newTransformStyles);
     }, []);
 
+    const colsePlanet = () => {
+        const audio = new Audio(whooshSound);
+        audio.playbackRate = 5;
+        audio.volume = 0.4;
+        audio.play();
+        setActivePlanet(null);
+    };
+    const openPlanet = (id: number) => {
+        const audio = new Audio(whooshSound);
+        audio.playbackRate = 5;
+        audio.volume = 0.4;
+        audio.play();
+        setActivePlanet(id);
+    };
+
+    const startGame = () => {
+        const audio = new Audio(mainBg);
+        audio.loop = true;
+        audio.play();
+        dispatch(setVisibilityHelloMenu(false));
+    }
+
+    
     return (
-        <div id="menu" onClick={() => setActivePlanet(null)}>
+        isVisibleHelloMenu ?
+        <div className="helloMenu">
+            <Button
+                text="Начать игру"
+                className="helloMenu__button"
+                onClick={startGame}
+            />
+        </div>
+        :
+            <div id="menu" onClick={colsePlanet}>
             {planets.map((planetData, index) => (
                 <Planet
                     key={planetData.id}
                     planetData={planetData}
                     transform={transformStyles[index]}
-                    setActivePlanet={setActivePlanet}
+                    setActivePlanet={openPlanet}
                     activePlanet={activePlanet}
                 />
             ))}
