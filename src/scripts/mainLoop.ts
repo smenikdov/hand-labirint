@@ -79,27 +79,27 @@ export default function startWatch() {
         }
     }
 
-    // const hands = new Hands({
-    //     locateFile: (file) => {
-    //         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    //     }
-    // });
+    const hands = new Hands({
+        locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }
+    });
 
-    // hands.setOptions({
-    //     maxNumHands: 1,
-    //     modelComplexity: 1,
-    //     minDetectionConfidence: 0.5,
-    //     minTrackingConfidence: 0.5,
-    // });
+    hands.setOptions({
+        maxNumHands: 1,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+    });
 
-    // hands.onResults(onResults);
+    hands.onResults(onResults);
 
-    // const camera = new Camera(videoElement, {
-    //     onFrame: async () => {
-    //         await hands.send({ image: videoElement });
-    //     },
-    // });
-    // camera.start();
+    const camera = new Camera(videoElement, {
+        onFrame: async () => {
+            await hands.send({ image: videoElement });
+        },
+    });
+    camera.start();
 
     if (store.getState().player.godMode) {
         let isMouseDown = false;
@@ -338,5 +338,5 @@ export default function startWatch() {
         });
     };
 
-    setInterval(mainLoop, 1000 / 30);
+    // setInterval(mainLoop, 1000 / 30);
 }

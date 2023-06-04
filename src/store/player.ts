@@ -22,7 +22,7 @@ const initialState: Player = {
     x: 50,
     y: 50,
     type: 'negative',
-    godMode: true,
+    godMode: false,
     bullets: [],
     enemies: [],
     angle: 0,
