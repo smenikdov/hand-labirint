@@ -30,7 +30,7 @@ interface PayloadChangeCellState {
 
 const initialState: Game = {
     planetId: 0,
-    levelId: 4,
+    levelId: 6,
     levelInfo: [],
     isLevelComplete: false,
     isVisibleHelloMenu: true,

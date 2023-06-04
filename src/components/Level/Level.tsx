@@ -11,6 +11,7 @@ import StopMode from './StopMode';
 import { useNavigate } from 'react-router-dom';
 import ModalDialog from '../ModalDialog';
 import Button from '../Button';
+import nextLevelSound from '../../assets/mp3/teleport.mp3';
 
 export default function Level() {
     const dispatch = useDispatch();
@@ -27,23 +28,25 @@ export default function Level() {
         if (!levelInfo.length) {
             navigate('/');
         }
+    }, []);
 
+    useEffect(() => {
         if (level.chat) {
             dispatch(addStack(level.chat));
         }
-    }, []);
+    }, [level.id]);
 
     const handleMenuGoOut = () => {
+        const audio = new Audio(nextLevelSound);
+        audio.play();
         navigate('/');
     };
 
     const goToNextLevel = () => {
+        const audio = new Audio(nextLevelSound);
+        audio.play();
         dispatch(setLevel(level.id + 1));
     };
-
-    if (chatStack.length > 0) {
-        return null;
-    }
 
     return (
         <>
@@ -67,26 +70,32 @@ export default function Level() {
                 //     setCanAttack={setCanAttack}
                 // />
             }
+            {
+                chatStack.length > 0 ?
+                null
+                :
+                <>
+                    <h1 className="levelTitle">
+                        {level.title}
+                    </h1>
 
-            <h1 className="levelTitle">
-                {level.title}
-            </h1>
-
-            <div id='map'>
-                {level.lab.map((line, yIndex) =>
-                    <div key={`row_${yIndex}`} className='row'>
-                        {
-                            [...line].map((cell, xIndex) =>
-                                <Cell
-                                    key={`cell_${xIndex}`}
-                                    cellSymbol={cell as CellSymbol}
-                                    status={levelInfo?.[xIndex]?.[yIndex]?.status}
-                                    playerType={player.type}
-                                />)
-                        }
+                    <div id='map'>
+                        {level.lab.map((line, yIndex) =>
+                            <div key={`row_${yIndex}`} className='row'>
+                                {
+                                    [...line].map((cell, xIndex) =>
+                                        <Cell
+                                            key={`cell_${xIndex}`}
+                                            cellSymbol={cell as CellSymbol}
+                                            status={levelInfo?.[xIndex]?.[yIndex]?.status}
+                                            playerType={player.type}
+                                        />)
+                                }
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
+                </>
+            }
 
             <ModalDialog
                 isVisible={isLevelComplete}

@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { Message } from '../scripts/types';
+import { Message, Voices } from '../scripts/types';
 
 interface Chat {
     stack: Message[],
+    voice: Voices,
 };
 
 const initialState: Chat = {
     stack: [],
+    voice: 'nice',
 };
 
 const slice = createSlice({
@@ -32,9 +34,13 @@ const slice = createSlice({
         resetChat(chat) {
             chat.stack = [];
         },
+
+        setVoice(chat, action: PayloadAction<Voices>) {
+            chat.voice = action.payload;
+        }
     }
 });
 
 export default slice.reducer;
-const { addMessage, removeMessage, resetChat, addStack } = slice.actions;
-export { addMessage, removeMessage, resetChat, addStack };
+const { addMessage, removeMessage, resetChat, addStack, setVoice } = slice.actions;
+export { addMessage, removeMessage, resetChat, addStack, setVoice };

@@ -38,7 +38,7 @@ const planets: Planet[] = [
 	},
 	{
 		id: planetId++,
-		name: 'Планета мироздания',
+		name: 'Планета умиротворения',
 		levels: startPlanetLevels,
 		isOpen: true,
 		cost: 0,

@@ -96,12 +96,30 @@
 
         .finish {
             position: relative;
-            @include strongLight($negativeColor);
+            &:not(.disable) {
+                @include strongLight($neutralColor);
+                &:after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 50%;
+                    height: 50%;
+                    transform: rotate(-45deg) translate(-2px, 12px);
+                    background: linear-gradient(to bottom right, #fff 0%, #fff 50%, #000 50%, #000 100%);
+                }
+            }
+            
         }
 
         .start {
             position: relative;
-            @include strongLight($negativeColor);
+            border-radius: 50%;
+            &:not(.disable) {
+                @include strongLight($neutralColor);
+            }
         }
 
         .wall {
@@ -208,7 +226,7 @@
 
     &.prepareWeapon {
         &.negative {
-            box-shadow: 0 0 35px $negativeColor
+            box-shadow: 0 0 35px $neutralColor
         }
 
         &.positive {
@@ -227,11 +245,11 @@
     &.shootWeapon {}
 
     &.negative {
-        @include strongLight($negativeColor);
+        @include strongLight($neutralColor);
 
         .triangle {
-            @include strongSvgLight($negativeColor);
-            border-color: transparent transparent transparent $negativeColor;
+            @include strongSvgLight($neutralColor);
+            border-color: transparent transparent transparent $neutralColor;
         }
     }
 

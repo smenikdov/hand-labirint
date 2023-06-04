@@ -67,12 +67,21 @@
     }
 }
 
-#menuButton {
+.menuButtons {
     z-index: 200;
-    justify-content: start;
     position: absolute;
     top: $exlgSize;
     left: $exlgSize;
+}
+
+.menuLogo {
+    height: 60px;
+    width: 100px;
+    margin-right: 20px;
+}
+
+.menuButton {
+    justify-content: start;
     cursor: pointer;
 
     div {

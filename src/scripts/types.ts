@@ -24,10 +24,13 @@ export type CellSymbol = ' ' | '1' | '0' | '┏' | '┓' | '┗' | '┛' | '-' |
 
 export type Character = 'megabot' | 'spaceship' | 'seller';
 
+export type Voices = 'sad' | 'angry' | 'scary' | 'nice';
+
 export type Message = {
     text: string,
     showTime?: number,
     character?: Character,
+    set?: Voices,
 };
 
 export interface LevelParams {

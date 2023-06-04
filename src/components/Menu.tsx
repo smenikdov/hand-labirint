@@ -8,6 +8,7 @@ import { setVisibilityHelloMenu } from '../store/game';
 import mainBg from '../assets/mp3/main-bg.mp3';
 import Button from './Button';
 import whooshSound from '../assets/mp3/whoosh.mp3';
+import { ReactComponent as Logo } from '../assets/img/logo.svg';
 
 const ROTATION_RADIUS = 240;
 
@@ -31,6 +32,9 @@ export default function Menu() {
     }, []);
 
     const colsePlanet = () => {
+        if (null === activePlanet) {
+            return;
+        }
         const audio = new Audio(whooshSound);
         audio.playbackRate = 5;
         audio.volume = 0.4;
@@ -38,6 +42,9 @@ export default function Menu() {
         setActivePlanet(null);
     };
     const openPlanet = (id: number) => {
+        if (id === activePlanet) {
+            return;
+        }
         const audio = new Audio(whooshSound);
         audio.playbackRate = 5;
         audio.volume = 0.4;
@@ -56,6 +63,7 @@ export default function Menu() {
     return (
         isVisibleHelloMenu ?
         <div className="helloMenu">
+            <Logo className="helloMenu__logo"/>
             <Button
                 text="Начать игру"
                 className="helloMenu__button"

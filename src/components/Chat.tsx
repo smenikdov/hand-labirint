@@ -1,15 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
+
 import { ReactComponent as MegabotIcon } from '../assets/img/megabot.svg';
+import { ReactComponent as NicePlanet } from '../assets/img/nice-planet.svg';
+import { ReactComponent as ScaryPlanet } from '../assets/img/scary-planet.svg';
+import { ReactComponent as AngryPlanet } from '../assets/img/angry-planet.svg';
 import { ReactComponent as EnterArrowIcon } from '../assets/img/enterArrow.svg';
+
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeMessage } from '../store/chat';
-import robotTickSound from '../assets/mp3/robot-tick-sound.mp3';
+import { removeMessage, setVoice } from '../store/chat';
+
+import sadVoice from '../assets/mp3/sad-voice.mp3';
+import angryVoice from '../assets/mp3/angry-voice.mp3';
+import niceVoice from '../assets/mp3/nice-voice.mp3';
+import scaryVoice from '../assets/mp3/scary-voice.mp3';
 
 
-const robotAudio = new Audio(robotTickSound);
-robotAudio.loop = true;
-robotAudio.volume = 0.6;
+const sadAudio = new Audio(sadVoice);
+sadAudio.loop = true;
+const angryAudio = new Audio(angryVoice);
+angryAudio.loop = true;
+angryAudio.volume = 0.6;
+const niceAudio = new Audio(niceVoice);
+niceAudio.loop = true;
+niceAudio.volume = 0.4;
+const scaryAudio = new Audio(scaryVoice);
+scaryAudio.loop = true;
+scaryAudio.volume = 0.6;
 
 export default function Chat() {
     const chat = useSelector((state: RootState) => state.chat);
@@ -18,6 +35,12 @@ export default function Chat() {
     const [active, setActive] = useState(false);
     const [displayText, setDisplayText] = useState('');
     const intervalRef = useRef<NodeJS.Timer | null>(null);
+    const names = {
+        'nice': 'Плаента умиротворения',
+        'sad': 'Плаента грусти',
+        'scary': 'Плаента страха',
+        'angry': 'Плаента гнева',
+    }
 
     const showNextMessage = () => {
         if (lastMessage.showTime) {
@@ -46,14 +69,32 @@ export default function Chat() {
 
     useEffect(() => {
         if (lastMessage && lastMessage.text) {
+            if (lastMessage.set) {
+                dispatch(setVoice(lastMessage.set));
+            }
+
+            if (lastMessage.set === 'nice' && niceAudio.paused) {
+                niceAudio.play();
+            }
+            if (lastMessage.set === 'angry' && niceAudio.paused) {
+                angryAudio.play();
+            }
+            if (lastMessage.set === 'scary' && niceAudio.paused) {
+                scaryAudio.play();
+            }
+            if (lastMessage.set === 'sad' && niceAudio.paused) {
+                sadAudio.play();
+            }
             startPrinting();
+        } else {
+            niceAudio.pause()
+            sadAudio.pause()
+            scaryAudio.pause()
+            angryAudio.pause()
         }
     }, [lastMessage]);
 
     const stopPrinting = () => {
-        console.log(123456)
-        robotAudio.pause();
-
         setActive(false);
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -62,8 +103,6 @@ export default function Chat() {
     };
 
     const startPrinting = () => {
-        console.log(3333)
-        robotAudio.play();
         setActive(true);
         let i = 0;
         setDisplayText('');
@@ -86,10 +125,19 @@ export default function Chat() {
     return (
         <div id="chat" style={{ opacity: chat.stack.length ? 1 : 0 }}>
             <div className="header flex column paLg">
-                <MegabotIcon className="icon" />
+                {
+                    chat.voice === 'nice' ?
+                    <NicePlanet className="icon" />
+                    : chat.voice === 'scary' ?
+                    <ScaryPlanet className="icon" />
+                    : chat.voice === 'angry' ?
+                    <AngryPlanet className="icon" />
+                    : null
+                }
                 <h2>
-                    Мегабот-97
+                    { names[chat.voice] }
                 </h2>
+
             </div>
 
             <div className="delimiter" />

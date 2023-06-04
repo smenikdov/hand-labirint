@@ -8,6 +8,7 @@ import { RootState } from '../store';
 import { setStars } from '../store/player';
 import ModalDialog from '../components/ModalDialog';
 import Button from './Button';
+import nextLevelSound from '../assets/mp3/teleport.mp3';
 
 interface PlanetProps {
     planetData: PlanetType,
@@ -71,6 +72,8 @@ export default function Planet({ planetData, transform = 'none', activePlanet, s
         if (activePlanet === null) {
             return;
         }
+        const audio = new Audio(nextLevelSound);
+        audio.play();
         dispatch(setPlanet(id));
         dispatch(setLevel(levelId));
         navigate('/game');

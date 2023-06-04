@@ -17,6 +17,14 @@ function Cell({ cellSymbol, status, playerType }: CellProps) {
             className.push('disable');
         }
 
+        if (playerType === 'positive' && cellSymbol === '1') {
+            className.push('disable');
+        }
+
+        if (playerType === 'negative' && cellSymbol === '0') {
+            className.push('disable');
+        }
+
         return className.join(' ')
     };
 

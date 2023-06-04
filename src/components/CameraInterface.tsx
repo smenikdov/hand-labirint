@@ -10,6 +10,8 @@ import Button from './Button';
 import { ReactComponent as CameraArrow } from '../assets/img/cameraArrow.svg';
 import { v4 as uuidv4 } from 'uuid';
 import { BiCheck, BiLinkAlt } from 'react-icons/bi';
+import nextLevelSound from '../assets/mp3/teleport.mp3';
+import { ReactComponent as Logo } from '../assets/img/logo.svg';
 
 export default function LevelMenu() {
     const [uuid, setUuid] = useState('');
@@ -23,6 +25,8 @@ export default function LevelMenu() {
     const starsCount = useSelector((state: RootState) => state.player.stars);
 
     const handleMenuGoOut = () => {
+        const audio = new Audio(nextLevelSound);
+        audio.play();
         setVisibilityMenu(false);
         navigate('/');
     };
@@ -102,20 +106,22 @@ export default function LevelMenu() {
 
     return (
         <>
-            {
-                location.pathname === '/game'
-                    ?
-                    <div
-                        id="menuButton"
-                        onClick={() => setVisibilityMenu(true)}
-                        className="flex paSm"
-                    >
-                        <div />
-                        <div />
-                    </div>
-                    :
-                    null
-            }
+            <div className="menuButtons flex">
+                <Logo className="menuLogo"/>
+                {
+                    location.pathname === '/game'
+                        ?
+                        <div
+                            onClick={() => setVisibilityMenu(true)}
+                            className="menuButton flex paSm"
+                        >
+                            <div />
+                            <div />
+                        </div>
+                        :
+                        null
+                }
+            </div>
             <div id="cameraInterface">
                 <canvas
                     id="outputCanvas"
@@ -139,12 +145,12 @@ export default function LevelMenu() {
                     Камера все еще работает
                 </div>
                 <div className="flex own mtSm mlLg">
-                    <div className="flex coinsCount">
+                    {/* <div className="flex coinsCount">
                         <div className="count">
                             {coinsCount}
                         </div>
                         <div className="icon mlSm" />
-                    </div>
+                    </div> */}
                     <div className="flex starsCount">
                         <div className="count">
                             {starsCount}

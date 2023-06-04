@@ -11,34 +11,46 @@
     @include strongLight($neutralColor);
     background: none;
     border: $wallSize solid $neutralColor;
+    justify-content: space-between;
     z-index: 200;
     display: flex;
 
 
     .header {
         @include smallFont();
+        font-size: 14px;
+        text-transform: lowercase;
+        flex-wrap: nowrap;
+        text-align: center;
+        width: fit-content;
+        max-width: fit-content;
+        width: 160px;
 
         .icon {
             @include strongSvgLight($neutralColor);
-            height: $mdSize * 4;
+            width: 120px;
+            min-height: 70px;
+            max-height: 70px;
         }
     }
 
     .delimiter {
         @include weakLight($neutralColor);
         width: $mdSize;
+        min-width: $mdSize;
         height: 100%;
     }
 
     .body {
         @include smallFont();
+        flex: 1 1;
     }
 
     .enterArrow {
-        position: absolute;
+        align-self: flex-end;
+        min-width: 60px;
+        width: 60px;
         cursor: pointer;
-        right: $mdSize;
-        bottom: $mdSize;
         @include strongSvgLight($neutralColor);
     }
 }
