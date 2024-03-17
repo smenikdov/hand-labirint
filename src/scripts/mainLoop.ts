@@ -139,6 +139,9 @@ export default function startWatch() {
         const game = state.game;
         const isLevelActive = !game.isLevelComplete && /game/.test(window.location.pathname) && game.levelInfo.length;
         const level = selectLevel(state);
+        if (!level) {
+            return;
+        }
         const angle = hp.calcAverageAngle(fingersData.lastAngles);
         const isFist = Math.round(hp.calcAverage(fingersData.lastFingersCounts)) === 4;
         const souldGenerateEnemyBot = level.enemyMode && newPlayerData.enemies.length < 15 && Math.random() < 1 / 20 / FPS;
